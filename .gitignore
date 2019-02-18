@@ -3,3 +3,6 @@
 .*
 *~
 /!.gitignore
+/games/*/tsconfig.json
+/games/*/content.ts
+/games/*/index.generated.ts
