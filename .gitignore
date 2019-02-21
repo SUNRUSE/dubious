@@ -4,5 +4,5 @@
 *~
 /!.gitignore
 /games/*/tsconfig.json
-/games/*/content.ts
+/games/*/content.generated.ts
 /games/*/index.generated.ts
