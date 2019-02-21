@@ -1,0 +1,30 @@
+{
+  "title": "Dubious Example",
+  "description": "An example \"game\" created using Dubious.",
+  "developer": {
+    "name": "SUNRUSE",
+    "url": "https://sunruse.co.uk"
+  },
+  "localizations": [
+    {
+      "localization": "en-gb",
+      "name": "English (British)",
+      "title": "Dubious Example (British English)",
+      "description": "An example \"game\" created using Dubious, in British English.",
+      "developer": {
+        "name": "SUNRUSE (British English)",
+        "url": "https://sunruse.co.uk/?localization=en-gb"
+      }
+    },
+    {
+      "localization": "fr-fr",
+      "name": "French (France)",
+      "title": "Exemple Douteux (Français de France)",
+      "description": "Un exemple de \"jeu\" créé avec Douteux, en Français de France.",
+      "developer": {
+        "name": "SUNRUSE (Français de France)",
+        "url": "https://sunruse.co.uk/?localization=fr-fr"
+      }
+    }
+  ]
+}
