@@ -1,0 +1,9 @@
+dist: trusty
+language: node_js
+node_js:
+  - node
+install:
+  - sudo sh install-aseprite.sh
+cache:
+  directories:
+    - ephemeral/aseprite-bin/

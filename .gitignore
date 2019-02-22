@@ -2,7 +2,8 @@
 /ephemeral
 .*
 *~
-/!.gitignore
+!/.gitignore
+!/.travis.yml
 /games/*/tsconfig.json
 /games/*/content.generated.ts
 /games/*/index.generated.ts
