@@ -58,13 +58,12 @@ deploy the created artifacts, please amend these scripts in your forks.
 
 When using AWS CodeBuild, using build cache is recommended.
 
+Only Ubuntu hosts are supported.  Aseprite will be built automatically from
+source at the last version to be open source (v1.1.7).
+
 #### Requirements
 
 - [Node.js](https://nodejs.org/en/)
-
-#### Optional
-
-- [Aseprite](https://www.aseprite.org/)
 
 ## File structure
 
