@@ -1,5 +1,6 @@
 if [ ! -f ephemeral/aseprite-bin/aseprite ] ; then
   rm -rf ephemeral/aseprite-bin
+  rm -rf ephemeral/aseprite-git
   git clone https://github.com/aseprite/aseprite ephemeral/aseprite-git --depth 1 --branch v1.1.7 --recursive || exit 1
   cd ephemeral/aseprite-git || exit 1
   apt-get update || exit
