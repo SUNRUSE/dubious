@@ -4,6 +4,11 @@ node_js:
   - node
 install:
   - sudo sh install-aseprite.sh
+  - npm install
+script:
+  - npm run-script ci
 cache:
   directories:
     - ephemeral/aseprite-bin/
+    - node_modules/**/*
+    - ephemeral/environments/production/**/*

@@ -3,6 +3,12 @@ phases:
   install:
     commands:
       - sh install-aseprite.sh
+      - npm install
+  build:
+    commands:
+      - npm run-script ci
 cache:
   paths:
     - ephemeral/aseprite-bin/**/*
+    - node_modules/**/*
+    - ephemeral/environments/production/**/*
