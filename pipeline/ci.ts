@@ -9,6 +9,7 @@ import oneOff from "./one-off"
 const fsReaddir = util.promisify(fs.readdir)
 
 async function program(): Promise<void> {
+  settings.ci = true
   console.log(`Searching for games...`)
   await utilities.asyncProgressBar(
     `Building games...`,
