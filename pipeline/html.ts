@@ -44,15 +44,15 @@ export default async function (
       switch (logos[0].extension) {
         case `ase`:
         case `aseprite`:
-          const resolvedAsepritePath = await aseprite.pathToExecutable.get()
+          const resolvedAsepritePath = await aseprite.executableConfiguration.get()
           const saveAs = logoPath = paths.tempFile(`logo.png`)
           await new Promise((resolve, reject) => childProcess
             .spawn(
-              resolvedAsepritePath,
-              [
+              resolvedAsepritePath.path,
+              resolvedAsepritePath.prefixedArguments.concat([
                 `--batch`, logos[0].source,
                 `--save-as`, saveAs
-              ]
+              ])
             )
             .on(`exit`, status => {
               if (status === 0) {
