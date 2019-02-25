@@ -12,5 +12,4 @@ artifacts:
     - ephemeral/environments/production/artifacts/**/*
 cache:
   paths:
-    - ephemeral/aseprite-bin/**/*
-    - ephemeral/environments/production/**/*
+    - ephemeral/**/*
