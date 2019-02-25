@@ -10,5 +10,5 @@ script:
 cache:
   directories:
     - ephemeral/aseprite-bin/
-    - node_modules/**/*
-    - ephemeral/environments/production/**/*
+    - node_modules
+    - ephemeral/environments/production
