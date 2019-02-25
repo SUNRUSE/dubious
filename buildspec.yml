@@ -13,5 +13,4 @@ artifacts:
 cache:
   paths:
     - ephemeral/aseprite-bin/**/*
-    - node_modules/**/*
     - ephemeral/environments/production/**/*
