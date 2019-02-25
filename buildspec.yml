@@ -7,6 +7,9 @@ phases:
   build:
     commands:
       - npm run-script ci
+artifacts:
+  files:
+    - ephemeral/environments/production/artifacts/**/*
 cache:
   paths:
     - ephemeral/aseprite-bin/**/*
