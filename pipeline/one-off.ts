@@ -10,16 +10,16 @@ const fsStat = util.promisify(fs.stat)
 
 export default async function (): Promise<void> {
   console.log(`Searching for files...`)
-  const contentModifiedDates: {
-    [filename: string]: number
+  const contentVersions: {
+    [filename: string]: string
   } = {}
   await utilities.asyncProgressBar(
     `Checking modified dates...`,
     (await recursiveReaddir(paths.srcDirectory())).filter(paths.shouldBeProcessed),
     true,
-    async file => contentModifiedDates[file] = (await fsStat(file)).mtime.getTime()
+    async file => contentVersions[file] = `${(await fsStat(file)).mtime.getTime()}`
   )
-  await run(contentModifiedDates)
+  await run(contentVersions)
 
   console.log(`Running TypeScript compiler...`)
   const process = childProcess.spawn(

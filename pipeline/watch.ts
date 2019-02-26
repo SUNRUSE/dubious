@@ -44,7 +44,7 @@ export default async function (): Promise<void> {
   let running = false
   let invalidated = false
   let throttling: null | NodeJS.Timer = null
-  const allPaths: { [path: string]: number } = {}
+  const allPaths: { [path: string]: string } = {}
   let ranAtLeastOnce = false
 
   chokidar
@@ -68,7 +68,7 @@ export default async function (): Promise<void> {
       if (!stats) {
         throw `No stats for "${event}" of "${path}"`
       }
-      allPaths[path] = stats.mtime.getTime()
+      allPaths[path] = `${stats.mtime.getTime()}`
       invalidate()
     }
   }

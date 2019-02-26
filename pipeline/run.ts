@@ -40,7 +40,7 @@ function filterUnsupportedContent(
 }
 
 export default async function (
-  contentModifiedDates: { readonly [filename: string]: number }
+  contentVersions: { readonly [filename: string]: string }
 ): Promise<void> {
   console.log(`Start of run.`)
   console.log(`Reading state file...`)
@@ -50,19 +50,19 @@ export default async function (
 
   console.log(`Comparing old and new file trees...`)
   const addedFiles = Object
-    .keys(contentModifiedDates)
-    .filter(file => !Object.prototype.hasOwnProperty.call(state.contentModifiedDates, file))
+    .keys(contentVersions)
+    .filter(file => !Object.prototype.hasOwnProperty.call(state.contentVersions, file))
   const updatedFiles = Object
-    .keys(contentModifiedDates)
-    .filter(file => Object.prototype.hasOwnProperty.call(state.contentModifiedDates, file))
-    .filter(file => contentModifiedDates[file] !== state.contentModifiedDates[file])
+    .keys(contentVersions)
+    .filter(file => Object.prototype.hasOwnProperty.call(state.contentVersions, file))
+    .filter(file => contentVersions[file] !== state.contentVersions[file])
   const deletedFiles = Object
-    .keys(state.contentModifiedDates)
-    .filter(file => !Object.prototype.hasOwnProperty.call(contentModifiedDates, file))
+    .keys(state.contentVersions)
+    .filter(file => !Object.prototype.hasOwnProperty.call(contentVersions, file))
   const unmodifiedFiles = Object
-    .keys(contentModifiedDates)
-    .filter(file => Object.prototype.hasOwnProperty.call(state.contentModifiedDates, file))
-    .filter(file => contentModifiedDates[file] === state.contentModifiedDates[file])
+    .keys(contentVersions)
+    .filter(file => Object.prototype.hasOwnProperty.call(state.contentVersions, file))
+    .filter(file => contentVersions[file] === state.contentVersions[file])
 
   await html(addedFiles, updatedFiles, deletedFiles, unmodifiedFiles)
 
@@ -126,7 +126,7 @@ export default async function (
 
   console.log(`Writing state file...`)
   state.firstRun = false
-  state.contentModifiedDates = contentModifiedDates
+  state.contentVersions = contentVersions
   await fsWriteFile(paths.stateFile(), JSON.stringify(state))
   console.log(`End of run.`)
 }

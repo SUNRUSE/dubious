@@ -84,13 +84,13 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 0
+export const stateVersion = 1
 
 export type State = {
   firstRun: boolean
   readonly version: number
-  contentModifiedDates: {
-    readonly [filename: string]: number
+  contentVersions: {
+    readonly [filename: string]: string
   }
   readonly packedContentMetadata: {
     [TPurpose in Purpose]: ReadonlyArray<Packed>
