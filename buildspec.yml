@@ -13,3 +13,4 @@ artifacts:
 cache:
   paths:
     - ephemeral/**/*
+    - node_modules/**/*

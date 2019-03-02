@@ -56,7 +56,7 @@ Build scripts are included for Travis CI and AWS CodeBuild.  These will perform
 a production build for all localizations of all games, but do nothing else.  To
 deploy the created artifacts, please amend these scripts in your forks.
 
-When using AWS CodeBuild, using local build cache is recommended.
+When using AWS CodeBuild, using S3 build cache is recommended.
 
 Only Ubuntu hosts are supported.  Aseprite will be built automatically from
 source at the last version to be open source (v1.1.7).
