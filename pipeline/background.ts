@@ -68,7 +68,7 @@ const exported: types.PurposeImplementation["background"] = {
             if (status === 0) {
               resolve()
             } else {
-              reject(new Error(`Unexpected Aseprite compiler exit (${status}).`))
+              reject(new Error(`Failed to invoke Aseprite to convert "${content.source}".`))
             }
           })
         )
