@@ -4,6 +4,7 @@
 *~
 !/.gitignore
 !/.travis.yml
+!/.vscode
 /games/*/tsconfig.json
 /games/*/content.generated.ts
 /games/*/index.generated.ts
