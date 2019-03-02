@@ -1,5 +1,6 @@
 import * as util from "util"
 import * as childProcess from "child_process"
+import * as _mkdirp from "mkdirp"
 import * as _rimraf from "rimraf"
 import * as pngjs from "pngjs"
 import * as types from "./types"
@@ -9,6 +10,7 @@ import * as utilities from "./utilities"
 import * as png from "./png"
 import * as aseprite from "./aseprite"
 
+const mkdirp = util.promisify(_mkdirp)
 const rimraf = util.promisify(_rimraf)
 
 const exported: types.PurposeImplementation["sprite"] = {
@@ -49,6 +51,7 @@ const exported: types.PurposeImplementation["sprite"] = {
       case `aseprite`:
         const sheetPath = paths.importedFile(content, `sheet.png`)
         const resolvedAsepritePath = await aseprite.executableConfiguration.get()
+        await mkdirp(paths.importedDirectory(content))
         const dataJson = await new Promise<string>((resolve, reject) => {
           let output = ``
           const process = childProcess.spawn(

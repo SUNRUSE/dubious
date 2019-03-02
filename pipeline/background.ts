@@ -1,6 +1,7 @@
 import * as fs from "fs"
 import * as util from "util"
 import * as childProcess from "child_process"
+import * as _mkdirp from "mkdirp"
 import * as _rimraf from "rimraf"
 import * as pngjs from "pngjs"
 import * as types from "./types"
@@ -11,6 +12,7 @@ import * as aseprite from "./aseprite"
 
 const fsUnlink = util.promisify(fs.unlink)
 const fsReadFile = util.promisify(fs.readFile)
+const mkdirp = util.promisify(_mkdirp)
 const rimraf = util.promisify(_rimraf)
 
 const exported: types.PurposeImplementation["background"] = {
@@ -51,6 +53,7 @@ const exported: types.PurposeImplementation["background"] = {
       case `ase`:
       case `aseprite`:
         const resolvedAsepritePath = await aseprite.executableConfiguration.get()
+        await mkdirp(paths.importedDirectory(content))
         const dataPath = paths.importedFile(content, `data.json`)
         await new Promise<string>((resolve, reject) => childProcess
           .spawn(
