@@ -455,3 +455,7 @@ Loads JSON from the given name.  Returns `null` if there is nothing saved with
 the given name.
 
 Note that no type checks will be performed on the returned data.
+
+## License
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSUNRUSE%2Fdubious.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FSUNRUSE%2Fdubious?ref=badge_large)
