@@ -74,6 +74,7 @@ export default async function () {
 
   console.log(`Deleting temp directory...`)
   await rimraf(paths.tempDirectory())
+
   console.log(`Deleting artifacts directory...`)
   await rimraf(paths.artifactsDirectory())
   const state: types.State = {
@@ -87,6 +88,10 @@ export default async function () {
       song: []
     }
   }
+
+  console.log(`Creating temp directory...`)
+  await mkdirp(paths.tempDirectory())
+
   console.log(`Creating artifacts directory...`)
   await mkdirp(paths.artifactsDirectory())
 
