@@ -204,7 +204,15 @@ const exported: types.PurposeImplementation["sprite"] = {
 
     const unpackedFrames: UnpackedFrame[] = []
 
-    if (!settings.development) {
+    if (settings.development) {
+      for (const loadedFrame of loadedFrames) {
+        unpackedFrames.push({
+          spriteFrame: loadedFrame.spriteFrame,
+          png: loadedFrame.png,
+          users: [loadedFrame.spriteFrame.segments]
+        })
+      }
+    } else {
       for (const loadedFrame of loadedFrames) {
         let needsAdding = true
         for (const unpackedFrame of unpackedFrames) {
