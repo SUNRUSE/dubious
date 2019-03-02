@@ -1,4 +1,4 @@
-# Dubious
+# Dubious [![Travis](https://img.shields.io/travis/SUNRUSE/dubious.svg)](https://travis-ci.org/SUNRUSE/dubious) [![License](https://img.shields.io/github/license/SUNRUSE/dubious.svg)](https://github.com/SUNRUSE/dubious/blob/master/license) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSUNRUSE%2Fdubious.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSUNRUSE%2Fdubious?ref=badge_shield) [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
 A really very questionable web game engine.
 
