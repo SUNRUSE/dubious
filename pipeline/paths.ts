@@ -47,17 +47,21 @@ export const artifactsFile = (name: string) => path.join(artifactsDirectory(), n
 export const stateFile = () => tempFile(`state.json`)
 
 export function analyze(file: string): null | types.ContentReference<string, string> {
-  const match = file.match(/^games[\\\/][^\\\/]+[\\\/]([^.]+)(?:\.([a-z]+))?\.([a-z]+)\.([a-z]+)$/)
+  const match = file.match(/^games[\\\/]([^\\\/]+)[\\\/]([^.]+)(?:\.([a-z]+))?\.([a-z]+)\.([a-z]+)$/)
   if (!match) {
     return null
   }
-  const localization = match[2]
+  const game = match[1]
+  if (game !== settings.game) {
+    return null
+  }
+  const localization = match[3]
   if (localization !== undefined && localization !== settings.localization) {
     return null
   }
-  const segments = match[1].split(/[\\\/]/)
-  const purpose = match[3]
-  const extension = match[4]
+  const segments = match[2].split(/[\\\/]/)
+  const purpose = match[4]
+  const extension = match[5]
   return {
     source: path.join.apply(
       path,
@@ -71,19 +75,33 @@ export function analyze(file: string): null | types.ContentReference<string, str
   }
 }
 
-export const isMetadataJson = (file: string): boolean => /^games[\\\/][^\\\/]+[\\\/]metadata\.json$/.test(file)
+export function isMetadataJson(file: string): boolean {
+  const match = file.match(/^games[\\\/]([^\\\/]+)[\\\/]metadata\.json$/)
+  if (!match) {
+    return false
+  }
+  const game = match[1]
+  if (game !== settings.game) {
+    return false
+  }
+  return true
+}
 
 export function analyzeLocalizationMetadata(file: string): null | types.MetadataContent {
-  const match = file.match(/^games[\\\/][^\\\/]+[\\\/]localizations[\\\/]([^\\\/]+)[\\\/]([^\.\\\/]+)\.([^\.\\\/]+)$/)
+  const match = file.match(/^games[\\\/]([^\\\/]+)[\\\/]localizations[\\\/]([^\\\/]+)[\\\/]([^\.\\\/]+)\.([^\.\\\/]+)$/)
   if (!match) {
     return null
   }
-  const localization = match[1]
+  const game = match[1]
+  if (game !== settings.game) {
+    return null
+  }
+  const localization = match[2]
   if (localization !== settings.localization) {
     return null
   }
-  const name = match[2]
-  const extension = match[3]
+  const name = match[3]
+  const extension = match[4]
   return {
     source: file,
     name,
