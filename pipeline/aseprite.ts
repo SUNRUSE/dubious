@@ -2,12 +2,11 @@ import * as os from "os"
 import * as fs from "fs"
 import * as path from "path"
 import * as util from "util"
-import settings from "./settings"
 import * as utilities from "./utilities"
 
 const fsStat = util.promisify(fs.stat)
 
-export const executableConfiguration = new utilities.AsyncCache(async () => {
+export const executablePath = new utilities.AsyncCache(async () => {
   for (const option of [
     [`ephemeral`, `aseprite-bin`, `aseprite`],
     [`aseprite`],
@@ -24,15 +23,7 @@ export const executableConfiguration = new utilities.AsyncCache(async () => {
       }
     }
     console.log(`Selected "${joined}" as Aseprite executable path.`)
-    return settings.ci
-      ? {
-        path: `xvfb-run`,
-        prefixedArguments: [joined]
-      }
-      : {
-        path: joined,
-        prefixedArguments: []
-      }
+    return joined
   }
   throw new Error(`No Aseprite executable found.`)
 })

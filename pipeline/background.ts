@@ -52,13 +52,13 @@ const exported: types.PurposeImplementation["background"] = {
         }
       case `ase`:
       case `aseprite`:
-        const resolvedAsepritePath = await aseprite.executableConfiguration.get()
+        const resolvedAsepritePath = await aseprite.executablePath.get()
         await mkdirp(paths.importedDirectory(content))
         const dataPath = paths.importedFile(content, `data.json`)
         await new Promise<string>((resolve, reject) => childProcess
           .spawn(
-            resolvedAsepritePath.path,
-            resolvedAsepritePath.prefixedArguments.concat([
+            resolvedAsepritePath,
+            [
               `--batch`, content.source,
               `--save-as`, paths.importedFile(content, `{frame}.png`),
               `--data`, dataPath,
@@ -66,7 +66,7 @@ const exported: types.PurposeImplementation["background"] = {
               `--format`, `json-array`,
               `--ignore-empty`
             ]
-            ))
+          )
           .on(`exit`, status => {
             if (status === 0) {
               resolve()

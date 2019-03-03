@@ -50,13 +50,13 @@ const exported: types.PurposeImplementation["sprite"] = {
       case `ase`:
       case `aseprite`:
         const sheetPath = paths.importedFile(content, `sheet.png`)
-        const resolvedAsepritePath = await aseprite.executableConfiguration.get()
+        const resolvedAsepritePath = await aseprite.executablePath.get()
         await mkdirp(paths.importedDirectory(content))
         const dataJson = await new Promise<string>((resolve, reject) => {
           let output = ``
           const process = childProcess.spawn(
-            resolvedAsepritePath.path,
-            resolvedAsepritePath.prefixedArguments.concat([
+            resolvedAsepritePath,
+            [
               `--batch`, content.source,
               `--list-tags`,
               `--format`, `json-array`,
@@ -64,7 +64,7 @@ const exported: types.PurposeImplementation["sprite"] = {
               `--sheet-pack`,
               `--trim`,
               `--ignore-empty`
-            ])
+            ]
           )
 
           let stdOutClosed = false
@@ -141,11 +141,11 @@ const exported: types.PurposeImplementation["sprite"] = {
         } else {
           await new Promise<string>((resolve, reject) => childProcess
             .spawn(
-              resolvedAsepritePath.path,
-              resolvedAsepritePath.prefixedArguments.concat([
+              resolvedAsepritePath,
+              [
                 `--batch`, content.source,
                 `--save-as`, sheetPath
-              ])
+              ]
             )
             .on(`exit`, status => {
               if (status === 0) {
