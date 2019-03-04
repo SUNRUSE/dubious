@@ -43,6 +43,7 @@ export const artifactsDirectory = () => path.join(
 )
 
 export const artifactsFile = (name: string) => path.join(artifactsDirectory(), name)
+export const artifactsIndexFile = () => artifactsFile(`index.js`)
 
 export const stateFile = () => tempFile(`state.json`)
 
