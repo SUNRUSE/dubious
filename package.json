@@ -1,7 +1,7 @@
 {
   "scripts": {
     "cli": "ts-node --project pipeline/tsconfig.json pipeline/cli",
-    "ci": "ts-node --project pipeline/tsconfig.json pipeline/ci"
+    "ci": "xvfb-run ts-node --project pipeline/tsconfig.json pipeline/ci"
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",
