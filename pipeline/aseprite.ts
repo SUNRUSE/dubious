@@ -8,11 +8,21 @@ import * as utilities from "./utilities"
 const fsStat = util.promisify(fs.stat)
 
 export const executableConfiguration = new utilities.AsyncCache(async () => {
-  for (const option of [
+  const options = [
     [`ephemeral`, `aseprite-bin`, `aseprite`],
+    [`ephemeral`, `aseprite-bin`, `aseprite.exe`],
     [`aseprite`],
     [os.homedir(), `.steam`, `steam`, `steamapps`, `common`, `Aseprite`, `aseprite`]
-  ]) {
+  ]
+  const programFiles = process.env[`PROGRAMFILES`]
+  if (programFiles !== undefined) {
+    options.push([programFiles, `Steam`, `steamapps`, `common`, `Aseprite`, `aseprite.exe`])
+  }
+  const programFiles86 = process.env[`PROGRAMFILES(x86)`]
+  if (programFiles86 !== undefined) {
+    options.push([programFiles86, `Steam`, `steamapps`, `common`, `Aseprite`, `aseprite.exe`])
+  }
+  for (const option of options) {
     const joined: string = path.join.apply(path, option)
     try {
       await fsStat(joined)
