@@ -67,7 +67,10 @@ export default async function (): Promise<void> {
   console.log(`Running TypeScript compiler...`)
   const process = childProcess.spawn(
     paths.tsc,
-    [`--project`, paths.typescriptProjectFile()]
+    [`--project`, paths.typescriptProjectFile()],
+    {
+      shell: true
+    }
   )
   process.stdout.setEncoding(`utf8`)
   process.stdout.on(`data`, data => {

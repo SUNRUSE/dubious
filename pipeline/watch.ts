@@ -28,7 +28,10 @@ export default async function (): Promise<void> {
       [
         `--project`, paths.typescriptProjectFile(),
         `--watch`, `--preserveWatchOutput`
-      ]
+      ],
+      {
+        shell: true
+      }
     )
   process.stdout.setEncoding(`utf8`)
   process.stdout.on(`data`, data => {
