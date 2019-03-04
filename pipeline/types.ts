@@ -1,6 +1,21 @@
-export type Purpose = `sprite` | `background` | `sound` | `song`
+export interface JsonArray extends ReadonlyArray<Json> { }
+
+export type Json =
+  | string
+  | number
+  | boolean
+  | JsonArray
+  | JsonObject
+  | null
+
+export type JsonObject = {
+  readonly [key: string]: Json
+}
+
+export type Purpose = `data` | `sprite` | `background` | `sound` | `song`
 
 export type ImportedCommonPurpose = {
+  readonly data: {}
   readonly sprite: {}
   readonly background: {
     readonly ids: number[]
@@ -12,6 +27,7 @@ export type ImportedCommonPurpose = {
 }
 
 export type ImportedPurpose = {
+  readonly data: Packed
   readonly sprite: {
     readonly segments: ReadonlyArray<string>
     readonly pngPath: string
@@ -47,6 +63,7 @@ export type ImportedPurposeFile<TPurpose extends Purpose> = {
 }
 
 export type PurposeExtensionType = {
+  readonly data: `json`
   readonly sprite: `png` | `ase` | `aseprite`
   readonly background: `png` | `ase` | `aseprite`
   readonly sound: `wav` | `flac`
@@ -56,6 +73,7 @@ export type PurposeExtensionType = {
 export const PurposeExtensionValue: {
   readonly [TPurpose in Purpose]: ReadonlyArray<PurposeExtensionType[TPurpose]>
 } = {
+  data: [`json`],
   sprite: [`png`, `ase`, `aseprite`],
   background: [`png`, `ase`, `aseprite`],
   sound: [`wav`, `flac`],
@@ -84,7 +102,7 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 4
+export const stateVersion = 5
 
 export type State = {
   firstRun: boolean

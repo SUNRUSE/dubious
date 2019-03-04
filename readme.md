@@ -258,10 +258,22 @@ content is loaded, all are loaded.
 
 | Purpose      | At startup | Can fail | Releasable | One file | Supported extensions   |
 |--------------|------------|----------|------------|----------|------------------------|
-| `sprite`     | ✔️          | ❌        | ❌          | ✔️        | `png` `ase` `aseprite` |
-| `background` | ❌          | ✔️        | ✔️          | ❌        | `png` `ase` `aseprite` |
-| `sound`      | ❌          | ✔️        | ❌          | ✔️        | `wav` `flac`           |
-| `song`       | ❌          | ✔️        | ✔️          | ❌        | `wav` `flac`           |
+| `data`       | ✔️         | ❌        | ❌          | ✔️       | `json`                 |
+| `sprite`     | ✔️         | ❌        | ❌          | ✔️       | `png` `ase` `aseprite` |
+| `background` | ❌          | ✔️       | ✔️         | ❌        | `png` `ase` `aseprite` |
+| `sound`      | ❌          | ✔️       | ❌          | ✔️       | `wav` `flac`           |
+| `song`       | ❌          | ✔️       | ✔️         | ❌        | `wav` `flac`           |
+
+### `data`
+
+Information which is included in the content tree.  This is broken down into
+subpaths, so it can share objects with content from other files.
+
+Precise functionality varies by file type.
+
+#### `json`
+
+JSON files are parsed and included as-is.
 
 ### `sprite`
 
@@ -344,8 +356,8 @@ longer align with the restored state, in which case it will need to be flushed.
 | Function       | Mutate state | Input | Video | Audio      | Save/load |
 |----------------|--------------|-------|-------|------------|-----------|
 | `initialState` | (returned)   | ❌     | ❌     | ❌          | ❌         |
-| `elapsed`      | ✔️            | ✔️     | ❌     | ✔️          | ✔️         |
-| `render`       | ❌            | ❌     | ✔️     | ❌          | ❌         |
+| `elapsed`      | ✔️           | ✔️    | ❌     | ✔️         | ✔️        |
+| `render`       | ❌            | ❌     | ✔️    | ❌          | ❌         |
 | `currentSong`  | ❌            | ❌     | ❌     | (returned) | ❌         |
 
 ##### `initial`

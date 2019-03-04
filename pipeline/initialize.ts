@@ -82,6 +82,7 @@ export default async function () {
     version: types.stateVersion,
     contentVersions: {},
     packedContentMetadata: {
+      data: [],
       sprite: [],
       background: [],
       sound: [],
@@ -96,6 +97,7 @@ export default async function () {
   await mkdirp(paths.artifactsDirectory())
 
   const defaultCommon: types.ImportedCommonPurpose = {
+    data: {},
     sprite: {},
     background: {
       ids: []
