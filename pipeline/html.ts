@@ -170,18 +170,18 @@ export default async function (
     }
 
     let html = `<!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>${selectedLocalization.title}</title>
-        <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, width=device-width, height=device-height, user-scalable=no">
-        ${htmlFragments.join(``)}
-      </head>
-      <body style="background: black; color: white;">
-        <div id="message" style="position: fixed; font-family: sans-serif; font-size: 0.5cm; top: 50%; line-height: 0.5cm; transform: translateY(-50%); left: 0; right: 0; text-align: center;">Loading; please ensure that JavaScript is enabled.</div>
-        <script src="index.js"></script>
-      </body>
-    </html>`
+<html style="background: black; color: white; user-select: none; -moz-user-select: none; -ms-user-select: none; cursor: default;">
+<head>
+  <meta charset="UTF-8">
+  <title>${selectedLocalization.title}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  ${htmlFragments.join(``)}
+</head>
+<body style="display: table; position: fixed; left: 0; top: 0; width: 100%; height: 100%; margin: 0;">
+  <pre id="message" style="display: table-cell; vertical-align: middle; text-align: center; font-family: sans-serif; font-size: 0.4cm;">Now loading... (please ensure that JavaScript is enabled)</pre>
+  <script src="index.js"></script>
+</body>
+</html>`
 
     if (!settings.development) {
       html = htmlMinifier.minify(html, {
