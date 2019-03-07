@@ -468,6 +468,25 @@ the given name.
 
 Note that no type checks will be performed on the returned data.
 
+## Differences between development and production builds
+
+In development builds, errors are logged to the console but the game does not
+stop.  In production builds, the game stops with text describing the error.
+
+In development builds, the game does not pause when focus is lost.  This is so
+that development tools can have focus without the game pausing.  In production
+builds, the game will pause and may release resources so that mobile devices do
+not kill the tab.
+
+In production builds, WebGL shaders are disposed of as soon as possible.  This
+causes stability problems in a number of WebGL debugging tools, so they are kept
+attached in development builds.
+
+More time is spent packing assets in production builds to reduce artifact size
+as much as possible.  Development builds, on the other hand, optimize for build
+performance.  For example, duplicate sprite frames are eliminated, PNGs are
+heavily compressed and JavaScript, HTML and CSS are minified.
+
 ## License
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSUNRUSE%2Fdubious.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FSUNRUSE%2Fdubious?ref=badge_large)
