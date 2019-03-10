@@ -29,7 +29,7 @@
     "mkdirp": "0.5.1",
     "node-wav": "0.0.2",
     "pngcrush-bin": "4.0.0",
-    "pngjs": "3.3.3",
+    "pngjs": "3.4.0",
     "progress": "2.0.3",
     "recursive-readdir": "2.2.2",
     "rimraf": "2.6.3",
