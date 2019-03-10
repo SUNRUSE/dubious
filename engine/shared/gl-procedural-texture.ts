@@ -1,4 +1,4 @@
-class GlTexture {
+class GlProceduralTexture {
   private contextId: null | number = null
   private texture: null | WebGLTexture = null
 
