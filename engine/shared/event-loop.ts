@@ -1,23 +1,38 @@
 let animationFrame: null | number = null
-let loaded = false
 
 function checkEventLoop(): void {
+  if (errorOccurred) {
+    pause()
+    return
+  }
+
+  const loadingMessage = generateLoadingMessage()
+  if (loadingMessage !== null) {
+    pause()
+    showMessage(loadingMessage)
+    return
+  }
+
   const focused = development || document.hasFocus()
-  if (loaded && focused && !errorOccurred && !contextLost) {
+
+  if (focused && !contextLost) {
     hideMessage()
     showCanvas()
     if (animationFrame === null) {
       animationFrame = requestAnimationFrame(onFrame)
     }
+    return
+  }
+
+  pause()
+  if (!focused) {
+    showMessage(`(paused)`)
   } else {
+    showMessage(`Waiting for WebGL restart...`)
+  }
+
+  function pause(): void {
     hideCanvas()
-    if (loaded && !errorOccurred) {
-      if (!focused) {
-        showMessage(`(paused)`)
-      } else {
-        showMessage(`Waiting for WebGL restart...`)
-      }
-    }
     if (animationFrame !== null) {
       cancelAnimationFrame(animationFrame)
       animationFrame = null
@@ -36,8 +51,3 @@ function onFrame(time: number): void {
 
 onfocus = checkEventLoop
 onblur = checkEventLoop
-
-onload = function () {
-  loaded = true
-  checkEventLoop()
-}
