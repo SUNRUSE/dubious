@@ -1,14 +1,10 @@
-let pageLoaded = false
+let loadedGameplayCriticalContent = 0
+let totalGameplayCriticalContent = 1
 
 function generateLoadingMessage(): null | string {
-  if (!pageLoaded) {
-    return `Now loading...`
+  if (loadedGameplayCriticalContent < totalGameplayCriticalContent) {
+    return `Now loading... (${loadedGameplayCriticalContent}/${totalGameplayCriticalContent})`
   } else {
     return null
   }
-}
-
-onload = function () {
-  pageLoaded = true
-  checkEventLoop()
 }
