@@ -10,15 +10,22 @@ onerror = function (
   }
 
   errorOccurred = true
-  showMessage(
-    `An unexpected error occurred.  This application will now stop.
+
+  const message = `An unexpected error occurred.  This application will now stop.
 Please ensure that your device and browser are up to date, then refresh to try again.
 
 Technical details on the error follow:
 ${event}
 ${source}@${lineNumber}:${columnNumber}
 ${error}`
-  )
 
-  checkEventLoop()
+  if (showMessage) {
+    showMessage(message)
+  } else {
+    alert(message)
+  }
+
+  if (checkEventLoop) {
+    checkEventLoop()
+  }
 }
