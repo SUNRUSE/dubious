@@ -5,6 +5,10 @@ onerror = function (
   source: string, lineNumber: number, columnNumber: number,
   error: Error
 ): void {
+  if (errorOccurred) {
+    return
+  }
+
   errorOccurred = true
   showMessage(
     `An unexpected error occurred.  This application will now stop.
