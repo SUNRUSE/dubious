@@ -27,7 +27,7 @@ export type ImportedCommonPurpose = {
 }
 
 export type ImportedPurpose = {
-  readonly data: Packed
+  readonly data: PackedItem
   readonly sprite: {
     readonly segments: ReadonlyArray<string>
     readonly pngPath: string
@@ -93,16 +93,21 @@ export type PurposeImplementation = {
     ): Promise<ReadonlyArray<ImportedPurpose[TPurpose]>>
     pack(
       imported: ReadonlyArray<ImportedPurpose[TPurpose]>
-    ): Promise<ReadonlyArray<Packed>>
+    ): Promise<Packed>
   }
 }
 
-export type Packed = {
+export type PackedItem = {
   readonly segments: ReadonlyArray<string>
   readonly code: string
 }
 
-export const stateVersion = 6
+export type Packed = {
+  readonly items: ReadonlyArray<PackedItem>
+  readonly code: string
+}
+
+export const stateVersion = 7
 
 export type State = {
   firstRun: boolean
@@ -111,7 +116,7 @@ export type State = {
     readonly [filename: string]: string
   }
   readonly packedContentMetadata: {
-    [TPurpose in Purpose]: ReadonlyArray<Packed>
+    [TPurpose in Purpose]: Packed
   }
 }
 

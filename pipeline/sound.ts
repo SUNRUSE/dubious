@@ -49,7 +49,7 @@ const exported: types.PurposeImplementation["sound"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["sound"]>
-  ): Promise<ReadonlyArray<types.Packed>> {
+  ): Promise<types.Packed> {
     type UnpackedSound = {
       readonly sound: types.ImportedPurpose["sound"]
       readonly raw: Float32Array
@@ -65,7 +65,7 @@ const exported: types.PurposeImplementation["sound"] = {
     const left: number[] = []
     const right: number[] = []
 
-    const output: types.Packed[] = []
+    const output: types.PackedItem[] = []
 
     for (const unpackedSound of unpackedSounds) {
       output.push({
@@ -87,7 +87,10 @@ const exported: types.PurposeImplementation["sound"] = {
 
     await audio.write([left, right], paths.artifactsFile(`atlas`))
 
-    return output
+    return {
+      code: ``,
+      items: output
+    }
   }
 }
 

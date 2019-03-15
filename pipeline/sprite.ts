@@ -177,14 +177,20 @@ const exported: types.PurposeImplementation["sprite"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["sprite"]>
-  ): Promise<ReadonlyArray<types.Packed>> {
+  ): Promise<types.Packed> {
     if (!imported.length) {
       await png.write(
         new pngjs.PNG({ width: 1, height: 1 }),
         paths.artifactsFile(`atlas.png`),
         true
       )
-      return []
+      return {
+        code: `
+const atlasWidth = 1
+const atlasHeight = 1
+`,
+        items: []
+      }
     }
 
     type LoadedFrame = {
@@ -506,12 +512,18 @@ const exported: types.PurposeImplementation["sprite"] = {
         )
       }
       await png.write(atlas, paths.artifactsFile(`atlas.png`), true)
-      const output: types.Packed[] = []
+      const output: types.PackedItem[] = []
       packedFrames.forEach(packedFrame => packedFrame.unpacked.users.forEach(user => output.push({
         segments: user,
         code: `engineSprite(${packedFrame.x}, ${packedFrame.y}, ${packedFrame.unpacked.spriteFrame.width}, ${packedFrame.unpacked.spriteFrame.height}, ${packedFrame.unpacked.spriteFrame.offsetX}, ${packedFrame.unpacked.spriteFrame.offsetY})`
       })))
-      return output
+      return {
+        code: `
+const atlasWidth = ${width}
+const atlasHeight = ${height}
+`,
+        items: output
+      }
     }
   }
 }

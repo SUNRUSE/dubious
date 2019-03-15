@@ -204,11 +204,14 @@ const exported: types.PurposeImplementation["background"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["background"]>
-  ): Promise<ReadonlyArray<types.Packed>> {
-    return imported.map(background => ({
-      segments: background.segments,
-      code: `engineBackground(${background.id})`
-    }))
+  ): Promise<types.Packed> {
+    return {
+      code: ``,
+      items: imported.map(background => ({
+        segments: background.segments,
+        code: `engineBackground(${background.id})`
+      }))
+    }
   }
 }
 

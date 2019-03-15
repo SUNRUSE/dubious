@@ -38,11 +38,14 @@ const exported: types.PurposeImplementation["song"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["song"]>
-  ): Promise<ReadonlyArray<types.Packed>> {
-    return imported.map(song => ({
-      segments: song.segments,
-      code: `engineSong(${song.id})`
-    }))
+  ): Promise<types.Packed> {
+    return {
+      code: ``,
+      items: imported.map(song => ({
+        segments: song.segments,
+        code: `engineSong(${song.id})`
+      }))
+    }
   }
 }
 

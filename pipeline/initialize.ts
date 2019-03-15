@@ -82,11 +82,26 @@ export default async function () {
     version: types.stateVersion,
     contentVersions: {},
     packedContentMetadata: {
-      data: [],
-      sprite: [],
-      background: [],
-      sound: [],
-      song: []
+      data: {
+        code: ``,
+        items: []
+      },
+      sprite: {
+        code: ``,
+        items: []
+      },
+      background: {
+        code: ``,
+        items: []
+      },
+      sound: {
+        code: ``,
+        items: []
+      },
+      song: {
+        code: ``,
+        items: []
+      }
     }
   }
 

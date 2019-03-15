@@ -58,8 +58,11 @@ const exported: types.PurposeImplementation["data"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["data"]>
-  ): Promise<ReadonlyArray<types.Packed>> {
-    return imported
+  ): Promise<types.Packed> {
+    return {
+      code: ``,
+      items: imported
+    }
   }
 }
 
