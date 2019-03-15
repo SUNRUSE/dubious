@@ -19,3 +19,7 @@ type GlTextureType =
   | GlConstants.UNSIGNED_SHORT_5_6_5
   | GlConstants.UNSIGNED_SHORT_4_4_4_4
   | GlConstants.UNSIGNED_SHORT_5_5_5_1
+
+type GlTexture = {
+  bind(gl: WebGLRenderingContext): void
+}
