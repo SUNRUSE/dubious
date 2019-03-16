@@ -47,6 +47,22 @@ function onFrame(time: number): void {
   gl.canvas.height = gl.canvas.clientHeight
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
 
+  resetTransformStack()
+
+  const targetAspectRatio = targetWidth / targetHeight
+  const actualAspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight
+  let ndcScaleX: number
+  let ndcScaleY: number
+  if (actualAspectRatio > targetAspectRatio) {
+    ndcScaleX = 2 / (targetWidth * actualAspectRatio / targetAspectRatio)
+    ndcScaleY = -2 / targetHeight
+  } else {
+    ndcScaleX = 2 / targetWidth
+    ndcScaleY = -2 / (targetHeight * targetAspectRatio / actualAspectRatio)
+  }
+  translateXY(ndcScaleX * targetWidth / -2, ndcScaleY * targetHeight / -2)
+  scaleXY(ndcScaleX, ndcScaleY)
+
   flushBatch(gl)
   animationFrame = requestAnimationFrame(onFrame)
 }
