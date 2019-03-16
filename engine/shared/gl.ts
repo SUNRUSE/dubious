@@ -22,13 +22,13 @@ function getGl(): WebGLRenderingContext {
     }
     canvas.addEventListener(`webglcontextlost`, event => {
       contextLost = true
-      activeAttributeIndices = null
       checkEventLoop()
       event.preventDefault()
     }, false)
     canvas.addEventListener(`webglcontextrestored`, event => {
       contextLost = false
       contextId++
+      activeAttributeIndices = null
       checkEventLoop()
       event.preventDefault()
     })
