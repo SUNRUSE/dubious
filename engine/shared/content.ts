@@ -1,3 +1,15 @@
+const atlasTexture = new GlGameplayCriticalImageTexture(
+  `atlas.png`,
+  GlConstants.TEXTURE_2D,
+  GlConstants.RGBA,
+  GlConstants.UNSIGNED_BYTE,
+  GlConstants.CLAMP_TO_EDGE,
+  GlConstants.CLAMP_TO_EDGE,
+  GlConstants.NEAREST,
+  GlConstants.NEAREST,
+  false
+)
+
 function engineSprite(
   atlasLeft: number,
   atlasTop: number,
