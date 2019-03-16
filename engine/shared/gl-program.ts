@@ -1,4 +1,14 @@
 let activeAttributeIndices: null | number[] = null
+const textureConstants = [
+  GlConstants.TEXTURE0,
+  GlConstants.TEXTURE1,
+  GlConstants.TEXTURE2,
+  GlConstants.TEXTURE3,
+  GlConstants.TEXTURE4,
+  GlConstants.TEXTURE5,
+  GlConstants.TEXTURE6,
+  GlConstants.TEXTURE7
+]
 
 interface GlUniform {
   readonly float: GlFloat
@@ -8,6 +18,7 @@ interface GlUniform {
   readonly mat2: GlMat2
   readonly mat3: GlMat3
   readonly mat4: GlMat4
+  readonly sampler2D: GlTexture
 }
 
 class GlProgram<TUniform extends {
@@ -72,6 +83,9 @@ class GlProgram<TUniform extends {
     const uniformFunctions: {
       [key: string]: (gl: WebGLRenderingContext, value: GlUniform[keyof GlUniform]) => void
     } = {}
+
+    let textures = 0
+
     for (const key in uniforms) {
       switch (uniforms[key]) {
         case `float`:
@@ -122,6 +136,22 @@ class GlProgram<TUniform extends {
               gl.uniformMatrix4fv(this.uniformLocations[key], false, value)
             }
           }
+          break
+        case `sampler2D`:
+          if (textures == textureConstants.length) {
+            throw new Error(`Too many texture samplers in a program`)
+          }
+          const index = textures
+          const textureConstant = textureConstants[index]
+          textures++
+          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlTexture): void => {
+            if (this.contextId == contextId) {
+              gl.activeTexture(textureConstant)
+              value.bind(gl)
+              gl.uniform1i(this.uniformLocations[key], index)
+            }
+          }
+
           break
       }
     }
