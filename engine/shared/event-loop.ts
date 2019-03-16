@@ -46,6 +46,8 @@ function onFrame(time: number): void {
   gl.canvas.width = gl.canvas.clientWidth
   gl.canvas.height = gl.canvas.clientHeight
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+  gl.clearColor(0, 0, 0, 1)
+  gl.clear(GlConstants.COLOR_BUFFER_BIT)
 
   resetTransformStack()
 
