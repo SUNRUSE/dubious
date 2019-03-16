@@ -12,5 +12,6 @@
 /// <reference path="gl-gameplay-critical-image-texture.ts" />
 /// <reference path="gl-buffer.ts" />
 /// <reference path="gl-program.ts" />
+/// <reference path="gl-batching.ts" />
 /// <reference path="event-loop.ts" />
 /// <reference path="start.ts" />
