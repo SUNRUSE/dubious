@@ -13,5 +13,6 @@
 /// <reference path="gl-program.ts" />
 /// <reference path="gl-batching.ts" />
 /// <reference path="content.ts" />
+/// <reference path="font.ts" />
 /// <reference path="event-loop.ts" />
 /// <reference path="start.ts" />
