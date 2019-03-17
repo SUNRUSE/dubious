@@ -31,7 +31,7 @@ export default async function () {
         noUnusedLocals: true,
         noFallthroughCasesInSwitch: true,
         noImplicitThis: true,
-        target: "es3",
+        target: "es5",
         outFile: path.join(paths.toRootFromSrcDirectory, paths.artifactsFile(`index.js`))
       }
     })
