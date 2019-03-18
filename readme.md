@@ -379,6 +379,8 @@ The dimensions of the "virtual display".  Note that this only defines the "safe
 area", and if the user's display is wider or taller than this aspect ratio,
 extra content may be shown at the top/bottom or left/right sides.
 
+todo: this needed a reshuffle
+
 | Symbol | Meaning                                                                |
 |--------|------------------------------------------------------------------------|
 | `█`    | Safe zone (always visible)                                             |
@@ -482,8 +484,8 @@ Note that no type checks will be performed on the returned data.
 
 ##### `saveLoadAvailable`
 
-Returns `true` to indicate that `save`/`load` should be possible, and `false` to
-indicate that it is definitely not possible.
+Defined as `true` to indicate that `save`/`load` should be possible, and `false`
+to indicate that it is definitely not possible.
 
 ## Differences between development and production builds
 
