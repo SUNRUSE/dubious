@@ -369,6 +369,10 @@ Returns the `State` to use if there is not one available already.
 Mutates the given `State` to take the given number of elapsed seconds into
 account.
 
+##### `localStoragePrefix`
+
+A constant string prefixed onto any local storage saves/loads.
+
 ##### `targetWidth`, `targetHeight`
 
 The dimensions of the "virtual display".  Note that this only defines the "safe
@@ -456,6 +460,14 @@ pixels.
 Plays the specified piece of content.
 
 #### Save/Load
+
+Local storage is used for save/load.
+
+The following keys/values will be created:
+
+- `{localStoragePrefix}-quicksave`
+- `{localStoragePrefix}-settings`
+- `{localStoragePrefix}-game-{name}`
 
 ##### `save`
 
