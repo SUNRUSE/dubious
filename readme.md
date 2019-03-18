@@ -478,7 +478,7 @@ create or overwrite, and `false` to indicate that no changes were made.
 
 ##### `load`
 
-Loads JSON from the given name.  Returns `null` if it could not be loaded.
+Loads JSON from the given name.  Returns `undefined` if it could not be loaded.
 
 Note that no type checks will be performed on the returned data.
 
