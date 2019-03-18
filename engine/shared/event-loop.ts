@@ -1,4 +1,7 @@
 let animationFrame: null | number = null
+let previousTime: null | number = null
+
+let state: State
 
 function checkEventLoop(): void {
   if (errorOccurred) {
@@ -32,6 +35,7 @@ function checkEventLoop(): void {
   }
 
   function pause(): void {
+    previousTime = null
     hideCanvas()
     if (animationFrame !== null) {
       cancelAnimationFrame(animationFrame)
@@ -42,6 +46,12 @@ function checkEventLoop(): void {
 
 function onFrame(time: number): void {
   animationFrame = null
+
+  if (previousTime !== null) {
+    elapsed(state, Math.min(0.1, (time - previousTime) / 1000))
+  }
+  previousTime = time
+
   const gl = getGl()
   gl.canvas.width = gl.canvas.clientWidth
   gl.canvas.height = gl.canvas.clientHeight
@@ -67,6 +77,8 @@ function onFrame(time: number): void {
   }
   translateXY(ndcScaleX * targetWidth / -2, ndcScaleY * targetHeight / -2)
   scaleXY(ndcScaleX, ndcScaleY)
+
+  render(gl)
 
   flushBatch(gl)
   animationFrame = requestAnimationFrame(onFrame)
