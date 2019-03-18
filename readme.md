@@ -467,6 +467,7 @@ Local storage is used for save/load.
 
 The following keys/values will be created:
 
+- `{localStoragePrefix}-check`
 - `{localStoragePrefix}-quicksave`
 - `{localStoragePrefix}-settings`
 - `{localStoragePrefix}-game-{name}`
