@@ -480,6 +480,11 @@ Loads JSON from the given name.  Returns `null` if it could not be loaded.
 
 Note that no type checks will be performed on the returned data.
 
+##### `saveLoadAvailable`
+
+Returns `true` to indicate that `save`/`load` should be possible, and `false` to
+indicate that it is definitely not possible.
+
 ## Differences between development and production builds
 
 In development builds, errors are logged to the console but the game does not
