@@ -471,12 +471,12 @@ The following keys/values will be created:
 
 ##### `save`
 
-Saves the given JSON as the given name.
+Saves the given JSON as the given name.  Returns `true` to indicate successful
+create or overwrite, and `false` to indicate that no changes were made.
 
 ##### `load`
 
-Loads JSON from the given name.  Returns `null` if there is nothing saved with
-the given name.
+Loads JSON from the given name.  Returns `null` if it could not be loaded.
 
 Note that no type checks will be performed on the returned data.
 
