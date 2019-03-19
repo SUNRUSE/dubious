@@ -1,6 +1,7 @@
 /// <reference path="message.ts" />
 /// <reference path="canvas.ts" />
 /// <reference path="loading.ts" />
+/// <reference path="save-load.ts" />
 /// <reference path="transform.ts" />
 /// <reference path="transform-stack.ts" />
 /// <reference path="gl.ts" />
