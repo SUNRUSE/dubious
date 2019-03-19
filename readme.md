@@ -483,10 +483,16 @@ Loads JSON from the given name.  Returns `undefined` if it could not be loaded.
 
 Note that no type checks will be performed on the returned data.
 
+##### `drop`
+
+Deletes previously saved JSON, by name.  Returns `true` to indicate that it
+definitely no longer exists (it may never have existed), and `false` to indicate
+that no changes were made.
+
 ##### `saveLoadAvailable`
 
-Defined as `true` to indicate that `save`/`load` should be possible, and `false`
-to indicate that it is definitely not possible.
+Defined as `true` to indicate that `save`/`load`/`drop` should be possible, and
+`false` to indicate that it is definitely not possible.
 
 ## Differences between development and production builds
 
