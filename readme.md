@@ -379,8 +379,6 @@ The dimensions of the "virtual display".  Note that this only defines the "safe
 area", and if the user's display is wider or taller than this aspect ratio,
 extra content may be shown at the top/bottom or left/right sides.
 
-todo: this needed a reshuffle
-
 | Symbol | Meaning                                                                |
 |--------|------------------------------------------------------------------------|
 | `█`    | Safe zone (always visible)                                             |
