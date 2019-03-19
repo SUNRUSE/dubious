@@ -48,7 +48,7 @@ function onFrame(time: number): void {
   animationFrame = null
 
   if (previousTime !== null) {
-    elapsed(state, Math.min(0.1, (time - previousTime) / 1000))
+    elapsed(state, Math.max(0, Math.min(0.1, (time - previousTime) / 1000)))
   }
   previousTime = time
 
