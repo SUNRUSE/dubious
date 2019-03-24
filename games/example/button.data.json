@@ -1,8 +1,18 @@
 {
-  "leftBorder": 4,
-  "rightBorder": 4,
-  "topBorder": 4,
-  "bottomBorder": 4,
-  "middleWidth": 4,
-  "middleHeight": 4
+  "idle": {
+    "leftBorder": 4,
+    "rightBorder": 4,
+    "topBorder": 4,
+    "bottomBorder": 4,
+    "middleWidth": 4,
+    "middleHeight": 4
+  },
+  "selected": {
+    "leftBorder": 5,
+    "rightBorder": 5,
+    "topBorder": 5,
+    "bottomBorder": 5,
+    "middleWidth": 5,
+    "middleHeight": 5
+  }
 }
