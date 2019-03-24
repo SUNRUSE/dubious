@@ -63,7 +63,7 @@ export default async function (): Promise<void> {
     })
     .on(`error`, error => { throw error })
 
-  function handle(event: string, path: string, stats: fs.Stats) {
+  function handle(event: string, path: string, stats: undefined | fs.Stats) {
     if (paths.shouldBeProcessed(path)) {
       if (ranAtLeastOnce) {
         console.log(`"${event}" of "${path}"`)
