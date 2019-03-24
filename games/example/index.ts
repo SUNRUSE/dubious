@@ -12,5 +12,5 @@ function initial(): State {
 function elapsed(state: State, deltaSeconds: number): void {
 }
 
-function render(gl: WebGLRenderingContext): void {
+function render(gl: WebGLRenderingContext, state: State): void {
 }
