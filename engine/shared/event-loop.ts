@@ -78,7 +78,7 @@ function onFrame(time: number): void {
   translateXY(ndcScaleX * targetWidth / -2, ndcScaleY * targetHeight / -2)
   scaleXY(ndcScaleX, ndcScaleY)
 
-  render(gl)
+  render(gl, state)
 
   flushBatch(gl)
   animationFrame = requestAnimationFrame(onFrame)
