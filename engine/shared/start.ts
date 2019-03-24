@@ -3,7 +3,7 @@ onload = function () {
   initializeSaveLoad()
   const quicksavePath = `${localStoragePrefix}-quicksave`
   const quicksave = loadDirect<State>(quicksavePath)
-  drop(quicksavePath)
+  dropDirect(quicksavePath)
   state = quicksave !== undefined ? quicksave : initial()
   onbeforeunload = () => {
     saveDirect(quicksavePath, state)
