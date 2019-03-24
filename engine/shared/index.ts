@@ -16,5 +16,6 @@
 /// <reference path="content.ts" />
 /// <reference path="font.ts" />
 /// <reference path="border.ts" />
+/// <reference path="input.ts" />
 /// <reference path="event-loop.ts" />
 /// <reference path="start.ts" />

@@ -434,6 +434,9 @@ details on its contents.
 
 #### Input
 
+Inputs are specified by their location rather than their label.  For instance,
+on a keyboard, WASD will transparently become ZQSD on a French keyboard.
+
 ##### `held`
 
 Returns `true` when the given input is held down, otherwise, `false`.
