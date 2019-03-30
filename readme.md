@@ -258,7 +258,7 @@ content is loaded, all are loaded.
 
 | Purpose      | At startup | Can fail | Releasable | One file | Supported extensions   |
 |--------------|------------|----------|------------|----------|------------------------|
-| `data`       | ✔️         | ❌        | ❌          | ✔️       | `json`                 |
+| `data`       | ✔️         | ❌        | ❌          | ✔️       | `json`, `csv`          |
 | `sprite`     | ✔️         | ❌        | ❌          | ✔️       | `png` `ase` `aseprite` |
 | `background` | ❌          | ✔️       | ✔️         | ❌        | `png` `ase` `aseprite` |
 | `sound`      | ❌          | ✔️       | ❌          | ✔️       | `wav` `flac`           |
@@ -274,6 +274,55 @@ Precise functionality varies by file type.
 #### `json`
 
 JSON files are parsed and included as-is.
+
+#### `csv`
+
+CSV files are parsed, then transformed into JSON.  For example, the following
+file:
+
+```csv
+a,b,c
+null,true,false
+-234.34,,Hello World
+```
+
+Is equivalent to:
+
+```json
+[{
+    "a": null,
+    "b": true,
+    "c": false
+}, {
+  "a": -234.34,
+  "c": "Hello World"
+}]
+```
+
+Additionally, a key-value map may be specified by naming a column "key", as
+follows:
+
+```csv
+key,a,b,c
+d,null,true,false
+e,-234.34,,Hello World
+```
+
+Is equivalent to:
+
+```json
+{
+  "d": {
+    "a": null,
+    "b": true,
+    "c": false
+  },
+  "e": {
+    "a": -234.34,
+    "c": "Hello World"
+  }
+}
+```
 
 ### `sprite`
 

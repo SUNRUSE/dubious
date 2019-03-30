@@ -63,7 +63,7 @@ export type ImportedPurposeFile<TPurpose extends Purpose> = {
 }
 
 export type PurposeExtensionType = {
-  readonly data: `json`
+  readonly data: `json` | `csv`
   readonly sprite: `png` | `ase` | `aseprite`
   readonly background: `png` | `ase` | `aseprite`
   readonly sound: `wav` | `flac`
@@ -73,7 +73,7 @@ export type PurposeExtensionType = {
 export const PurposeExtensionValue: {
   readonly [TPurpose in Purpose]: ReadonlyArray<PurposeExtensionType[TPurpose]>
 } = {
-  data: [`json`],
+  data: [`json`, `csv`],
   sprite: [`png`, `ase`, `aseprite`],
   background: [`png`, `ase`, `aseprite`],
   sound: [`wav`, `flac`],
@@ -107,7 +107,7 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 8
+export const stateVersion = 9
 
 export type State = {
   firstRun: boolean
