@@ -34,11 +34,11 @@ class Transform {
 
   translateX(by: number): void {
     this.x += this.xx * by
-    this.y += this.yx * by
+    this.y += this.xy * by
   }
 
   translateY(by: number): void {
-    this.x += this.xy * by
+    this.x += this.yx * by
     this.y += this.yy * by
   }
 
