@@ -38,7 +38,7 @@ class Sprite {
     this.vMax = (atlasTop + height + 0.5) / atlasHeight
   }
 
-  draw(gl: WebGLRenderingContext): void {
+  draw(): void {
     const transformedXMinX = this.xMin * currentTransform.xx
     const transformedXMinY = this.xMin * currentTransform.xy
     const transformedXMaxX = this.xMax * currentTransform.xx
@@ -48,7 +48,7 @@ class Sprite {
     const transformedYMaxX = this.yMax * currentTransform.yx
     const transformedYMaxY = this.yMax * currentTransform.yy
     drawBatch(
-      gl, atlasTexture,
+      atlasTexture,
       transformedXMinX + transformedYMinX + currentTransform.x,
       transformedXMinY + transformedYMinY + currentTransform.y,
       this.uMin, this.vMin,

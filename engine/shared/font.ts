@@ -24,7 +24,7 @@ class Font {
     }
   ) { }
 
-  write(gl: WebGLRenderingContext, text: string, horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment): void {
+  write(text: string, horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment): void {
     transformGroup(() => {
       const lines = text.split(`\n`)
       switch (verticalAlignment) {
@@ -47,7 +47,7 @@ class Font {
           }
           for (const character of line) {
             if (Object.prototype.hasOwnProperty.call(this.content.sprites, character)) {
-              this.content.sprites[character].draw(gl)
+              this.content.sprites[character].draw()
             }
 
             translateX(this.characterWidth(character) + this.content.layout.kerning)

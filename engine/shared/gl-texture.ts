@@ -38,5 +38,5 @@ type GlTextureMagFilter =
   | GlConstants.LINEAR_MIPMAP_LINEAR
 
 type GlTexture = {
-  bind(gl: WebGLRenderingContext): void
+  bind(): void
 }

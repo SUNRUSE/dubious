@@ -13,7 +13,7 @@ class GlBuffer {
     private readonly dataFactory: () => ArrayBufferView
   ) { }
 
-  bind(gl: WebGLRenderingContext): void {
+  bind(): void {
     if (this.contextId != contextId) {
       this.buffer = gl.createBuffer()
       gl.bindBuffer(this.target, this.buffer)

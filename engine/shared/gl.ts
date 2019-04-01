@@ -1,4 +1,4 @@
-let gl: null | WebGLRenderingContext = null
+let gl: WebGLRenderingContext
 let contextLost = false
 let contextId = 0
 
@@ -15,11 +15,12 @@ function getGl(): WebGLRenderingContext {
       preserveDrawingBuffer: false,
       stencil: false
     }
-    gl = canvas.getContext(`webgl`, attributes)
+    const possibleGl = canvas.getContext(`webgl`, attributes)
       || canvas.getContext(`experimental-webgl`, attributes)
-    if (!gl) {
+    if (!possibleGl) {
       throw new Error(`Failed to create a WebGL context.`)
     }
+    gl = possibleGl
     canvas.addEventListener(`webglcontextlost`, event => {
       contextLost = true
       checkEventLoop()

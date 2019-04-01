@@ -19,39 +19,39 @@ class Border {
     }
   ) { }
 
-  draw(gl: WebGLRenderingContext, width: number, height: number): void {
-    this.content.topLeft.draw(gl)
+  draw(width: number, height: number): void {
+    this.content.topLeft.draw()
     transformGroup(() => {
       translateX(this.content.leftBorder)
       scaleX((width - this.content.leftBorder - this.content.rightBorder) / this.content.middleWidth)
-      this.content.top.draw(gl)
+      this.content.top.draw()
     })
     transformGroup(() => {
       translateX(width - this.content.rightBorder)
-      this.content.topRight.draw(gl)
+      this.content.topRight.draw()
     })
     transformGroup(() => {
       translateY(this.content.topBorder)
       scaleY((height - this.content.topBorder - this.content.bottomBorder) / this.content.middleHeight)
-      this.content.left.draw(gl)
+      this.content.left.draw()
       transformGroup(() => {
         translateX(this.content.leftBorder)
         scaleX((width - this.content.leftBorder - this.content.rightBorder) / this.content.middleWidth)
-        this.content.middle.draw(gl)
+        this.content.middle.draw()
       })
       translateX(width - this.content.rightBorder)
-      this.content.right.draw(gl)
+      this.content.right.draw()
     })
     translateY(height - this.content.bottomBorder)
-    this.content.bottomLeft.draw(gl)
+    this.content.bottomLeft.draw()
     transformGroup(() => {
       translateX(this.content.leftBorder)
       scaleX((width - this.content.leftBorder - this.content.rightBorder) / this.content.middleWidth)
-      this.content.bottom.draw(gl)
+      this.content.bottom.draw()
     })
     transformGroup(() => {
       translateX(width - this.content.rightBorder)
-      this.content.bottomRight.draw(gl)
+      this.content.bottomRight.draw()
     })
   }
 }

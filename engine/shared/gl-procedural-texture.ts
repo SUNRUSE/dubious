@@ -16,7 +16,7 @@ class GlProceduralTexture implements GlTexture {
     private readonly pixelsFactory: () => ArrayBufferView
   ) { }
 
-  bind(gl: WebGLRenderingContext): void {
+  bind(): void {
     if (this.contextId != contextId) {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)

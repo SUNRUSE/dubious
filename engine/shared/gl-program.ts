@@ -50,11 +50,11 @@ class GlProgram<TUniform extends {
   private attributeIndicesArray: null | number[]
 
   readonly uniforms: {
-    readonly [key in keyof TUniform]: (gl: WebGLRenderingContext, value: GlUniform[TUniform[key]]) => void
+    readonly [key in keyof TUniform]: (value: GlUniform[TUniform[key]]) => void
   }
 
   readonly attributes: {
-    readonly [key in keyof TAttribute]: (gl: WebGLRenderingContext, stride: number, offset: number) => void
+    readonly [key in keyof TAttribute]: (stride: number, offset: number) => void
   }
 
   constructor(
@@ -81,7 +81,7 @@ class GlProgram<TUniform extends {
     this.fragmentSource = `precision mediump float;${lineSeparator}${header}${fragmentSource.join(lineSeparator)}${footer}`
 
     const uniformFunctions: {
-      [key: string]: (gl: WebGLRenderingContext, value: GlUniform[keyof GlUniform]) => void
+      [key: string]: (value: GlUniform[keyof GlUniform]) => void
     } = {}
 
     let textures = 0
@@ -89,49 +89,49 @@ class GlProgram<TUniform extends {
     for (const key in uniforms) {
       switch (uniforms[key]) {
         case `float`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlFloat): void => {
+          uniformFunctions[key] = (value: GlFloat): void => {
             if (this.contextId == contextId) {
               gl.uniform1f(this.uniformLocations[key], value)
             }
           }
           break
         case `vec2`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlVec2): void => {
+          uniformFunctions[key] = (value: GlVec2): void => {
             if (this.contextId == contextId) {
               gl.uniform2fv(this.uniformLocations[key], value)
             }
           }
           break
         case `vec3`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlVec3): void => {
+          uniformFunctions[key] = (value: GlVec3): void => {
             if (this.contextId == contextId) {
               gl.uniform3fv(this.uniformLocations[key], value)
             }
           }
           break
         case `vec4`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlVec4): void => {
+          uniformFunctions[key] = (value: GlVec4): void => {
             if (this.contextId == contextId) {
               gl.uniform4fv(this.uniformLocations[key], value)
             }
           }
           break
         case `mat2`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlMat2): void => {
+          uniformFunctions[key] = (value: GlMat2): void => {
             if (this.contextId == contextId) {
               gl.uniformMatrix2fv(this.uniformLocations[key], false, value)
             }
           }
           break
         case `mat3`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlMat3): void => {
+          uniformFunctions[key] = (value: GlMat3): void => {
             if (this.contextId == contextId) {
               gl.uniformMatrix3fv(this.uniformLocations[key], false, value)
             }
           }
           break
         case `mat4`:
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlMat4): void => {
+          uniformFunctions[key] = (value: GlMat4): void => {
             if (this.contextId == contextId) {
               gl.uniformMatrix4fv(this.uniformLocations[key], false, value)
             }
@@ -144,10 +144,10 @@ class GlProgram<TUniform extends {
           const index = textures
           const textureConstant = textureConstants[index]
           textures++
-          uniformFunctions[key] = (gl: WebGLRenderingContext, value: GlTexture): void => {
+          uniformFunctions[key] = (value: GlTexture): void => {
             if (this.contextId == contextId) {
               gl.activeTexture(textureConstant)
-              value.bind(gl)
+              value.bind()
               gl.uniform1i(this.uniformLocations[key], index)
             }
           }
@@ -156,14 +156,14 @@ class GlProgram<TUniform extends {
       }
     }
     this.uniforms = uniformFunctions as {
-      readonly [key in keyof TUniform]: (gl: WebGLRenderingContext, value: GlUniform[TUniform[key]]) => void
+      readonly [key in keyof TUniform]: (value: GlUniform[TUniform[key]]) => void
     }
 
     const attributeFunctions: {
-      [key: string]: (gl: WebGLRenderingContext, stride: number, offset: number) => void
+      [key: string]: (stride: number, offset: number) => void
     } = {}
     for (const key in attributes) {
-      attributeFunctions[key] = (gl: WebGLRenderingContext, stride: number, offset: number): void => {
+      attributeFunctions[key] = (stride: number, offset: number): void => {
         const index = this.attributeIndices[key]
         if (this.contextId == contextId && index != null) {
           gl.vertexAttribPointer(index, attributes[key].size, attributes[key].type, attributes[key].normalized, stride, offset)
@@ -171,11 +171,11 @@ class GlProgram<TUniform extends {
       }
     }
     this.attributes = attributeFunctions as {
-      readonly [key in keyof TAttribute]: (gl: WebGLRenderingContext, stride: number, offset: number) => void
+      readonly [key in keyof TAttribute]: (stride: number, offset: number) => void
     }
   }
 
-  bind(gl: WebGLRenderingContext): void {
+  bind(): void {
     if (this.contextId != contextId) {
       this.program = gl.createProgram()
       if (!this.program) {
@@ -225,7 +225,7 @@ class GlProgram<TUniform extends {
         uniformLocations[key] = gl.getUniformLocation(program, key)
       }
       this.uniformLocations = uniformLocations as {
-        readonly [key in keyof TUniform]: (gl: WebGLRenderingContext, value: GlUniform[TUniform[key]]) => void
+        readonly [key in keyof TUniform]: (value: GlUniform[TUniform[key]]) => void
       }
 
       const attributeIndices: { [key: string]: null | number } = {}

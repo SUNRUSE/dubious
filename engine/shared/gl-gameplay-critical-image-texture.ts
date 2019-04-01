@@ -29,7 +29,7 @@ class GlGameplayCriticalImageTexture {
     totalGameplayCriticalContent++
   }
 
-  bind(gl: WebGLRenderingContext): void {
+  bind(): void {
     if (this.contextId != contextId) {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)

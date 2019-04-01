@@ -83,7 +83,7 @@ class BatchCache {
   private cached: null | ReadonlyArray<CachedBatchSprite> = null
 
   constructor(
-    private readonly content: (gl: WebGLRenderingContext) => void
+    private readonly content: () => void
   ) { }
 
   keepAlive(): void {
@@ -104,7 +104,7 @@ class BatchCache {
     return this.active
   }
 
-  draw(gl: WebGLRenderingContext) {
+  draw() {
     if (writingBatchCache !== null) {
       throw new Error(`Cannot nest BatchCache draw calls`)
     }
@@ -114,14 +114,14 @@ class BatchCache {
     if (this.cached === null) {
       this.cached = writingBatchCache = []
       pushTransformStack(true)
-      this.content(gl)
+      this.content()
       popTransformStack()
       writingBatchCache = null
     }
 
     for (const sprite of this.cached) {
       drawBatch(
-        gl, sprite.texture,
+        sprite.texture,
         currentTransform.applyX(sprite.x1, sprite.y1), currentTransform.applyY(sprite.x1, sprite.y1), sprite.u1, sprite.v1,
         currentTransform.applyX(sprite.x2, sprite.y2), currentTransform.applyY(sprite.x2, sprite.y2), sprite.u2, sprite.v2,
         currentTransform.applyX(sprite.x3, sprite.y3), currentTransform.applyY(sprite.x3, sprite.y3), sprite.u3, sprite.v3,
@@ -135,7 +135,6 @@ let batchTexture: null | GlTexture = null
 let batchProgress = 0
 
 function drawBatch(
-  gl: WebGLRenderingContext,
   texture: GlTexture,
   x1: number, y1: number, u1: number, v1: number,
   x2: number, y2: number, u2: number, v2: number,
@@ -144,10 +143,10 @@ function drawBatch(
 ): void {
   if (writingBatchCache === null) {
     if (texture !== batchTexture) {
-      flushBatch(gl)
+      flushBatch()
       batchTexture = texture
     } else if (batchProgress === 16384) {
-      flushBatch(gl)
+      flushBatch()
     }
 
     let vertexIndex = batchProgress * 16
@@ -179,17 +178,17 @@ function drawBatch(
   }
 }
 
-function flushBatch(gl: WebGLRenderingContext): void {
+function flushBatch(): void {
   if (batchTexture === null || batchProgress === 0) {
     return
   }
-  batchProgram.bind(gl)
-  batchVertices.bind(gl)
+  batchProgram.bind()
+  batchVertices.bind()
   gl.bufferSubData(GlConstants.ARRAY_BUFFER, 0, batchVertexData.subarray(0, batchProgress * 16))
-  batchProgram.attributes.aLocation(gl, 16, 0)
-  batchProgram.attributes.aTextureCoordinate(gl, 16, 8)
-  batchIndices.bind(gl)
-  batchProgram.uniforms.uTexture(gl, batchTexture)
+  batchProgram.attributes.aLocation(16, 0)
+  batchProgram.attributes.aTextureCoordinate(16, 8)
+  batchIndices.bind()
+  batchProgram.uniforms.uTexture(batchTexture)
   gl.drawElements(GlConstants.TRIANGLES, batchProgress * 6, GlConstants.UNSIGNED_SHORT, 0)
   batchProgress = 0
 }
