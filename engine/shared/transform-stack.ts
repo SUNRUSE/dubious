@@ -2,7 +2,7 @@ let currentTransform = new Transform()
 const transformStack: Transform[] = [currentTransform]
 let transformStackPointer = 0
 
-function pushTransformStack(): void {
+function pushTransformStack(identity: boolean): void {
   transformStackPointer++
   let transform: Transform
   if (transformStackPointer === transformStack.length) {
@@ -11,7 +11,11 @@ function pushTransformStack(): void {
   } else {
     transform = transformStack[transformStackPointer]
   }
-  currentTransform.copy(transform)
+  if (identity) {
+    transform.identity()
+  } else {
+    currentTransform.copy(transform)
+  }
   currentTransform = transform
 }
 
@@ -27,7 +31,7 @@ function resetTransformStack(): void {
 }
 
 function transformGroup(content: () => void): void {
-  pushTransformStack()
+  pushTransformStack(false)
   content()
   popTransformStack()
 }
