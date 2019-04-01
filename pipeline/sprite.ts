@@ -304,8 +304,8 @@ const atlasHeight = 1
       readonly height: number
     }
 
-    const widthOfWidestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.requiredWidth), 0)
-    const heightOfTallestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.requiredHeight), 0)
+    const widthOfWidestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.requiredWidth), 0) + 1
+    const heightOfTallestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.requiredHeight), 0) + 1
     const totalSpriteArea = unpackedFrames.reduce((a, b) => a + b.requiredWidth * b.requiredHeight, 0)
 
     let maximumAtlasWidth = 1
@@ -333,8 +333,8 @@ const atlasHeight = 1
 
     while (true) {
       const spaces: Space[] = [{
-        x: 0,
-        y: 0,
+        x: 1,
+        y: 1,
         width: maximumAtlasWidth,
         height: maximumAtlasHeight
       }]
