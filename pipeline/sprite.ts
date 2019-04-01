@@ -209,6 +209,8 @@ const atlasHeight = 1
       readonly spriteFrame: types.ImportedPurpose["sprite"]
       readonly png: pngjs.PNG
       readonly users: ReadonlyArray<string>[]
+      readonly requiredWidth: number
+      readonly requiredHeight: number
     }
 
     const unpackedFrames: UnpackedFrame[] = []
@@ -218,7 +220,9 @@ const atlasHeight = 1
         unpackedFrames.push({
           spriteFrame: loadedFrame.spriteFrame,
           png: loadedFrame.png,
-          users: [loadedFrame.spriteFrame.segments]
+          users: [loadedFrame.spriteFrame.segments],
+          requiredWidth: loadedFrame.spriteFrame.width + 1,
+          requiredHeight: loadedFrame.spriteFrame.height + 1
         })
       }
     } else {
@@ -270,7 +274,9 @@ const atlasHeight = 1
           unpackedFrames.push({
             spriteFrame: loadedFrame.spriteFrame,
             png: loadedFrame.png,
-            users: [loadedFrame.spriteFrame.segments]
+            users: [loadedFrame.spriteFrame.segments],
+            requiredWidth: loadedFrame.spriteFrame.width + 1,
+            requiredHeight: loadedFrame.spriteFrame.height + 1
           })
         }
       }
@@ -278,10 +284,10 @@ const atlasHeight = 1
 
     unpackedFrames.sort((a, b) => {
       // The "most awkward" sprites come first as they'll be harder to pack.
-      if (Math.max(a.spriteFrame.width, a.spriteFrame.height) > Math.max(b.spriteFrame.width, b.spriteFrame.height)) return -1
-      if (Math.max(a.spriteFrame.width, a.spriteFrame.height) < Math.max(b.spriteFrame.width, b.spriteFrame.height)) return 1
-      if ((a.spriteFrame.width * a.spriteFrame.height) > (b.spriteFrame.width * b.spriteFrame.height)) return -1
-      if ((a.spriteFrame.width * a.spriteFrame.height) < (b.spriteFrame.width * b.spriteFrame.height)) return 1
+      if (Math.max(a.requiredWidth, a.requiredHeight) > Math.max(b.requiredWidth, b.requiredHeight)) return -1
+      if (Math.max(a.requiredWidth, a.requiredHeight) < Math.max(b.requiredWidth, b.requiredHeight)) return 1
+      if ((a.requiredWidth * a.requiredHeight) > (b.requiredWidth * b.requiredHeight)) return -1
+      if ((a.requiredWidth * a.requiredHeight) < (b.requiredWidth * b.requiredHeight)) return 1
       return 0
     })
 
@@ -298,9 +304,9 @@ const atlasHeight = 1
       readonly height: number
     }
 
-    const widthOfWidestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.spriteFrame.width), 0)
-    const heightOfTallestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.spriteFrame.height), 0)
-    const totalSpriteArea = unpackedFrames.reduce((a, b) => a + b.spriteFrame.width * b.spriteFrame.height, 0)
+    const widthOfWidestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.requiredWidth), 0)
+    const heightOfTallestSprite = unpackedFrames.reduce((a, b) => Math.max(a, b.requiredHeight), 0)
+    const totalSpriteArea = unpackedFrames.reduce((a, b) => a + b.requiredWidth * b.requiredHeight, 0)
 
     let maximumAtlasWidth = 1
     let maximumAtlasHeight = 1
@@ -374,7 +380,7 @@ const atlasHeight = 1
 
         let found = false
         for (const space of spaces) {
-          if (space.width !== frame.spriteFrame.width || space.height !== frame.spriteFrame.height) continue
+          if (space.width !== frame.requiredWidth || space.height !== frame.requiredHeight) continue
           found = true
           packedFrames.push({
             x: space.x,
@@ -389,8 +395,8 @@ const atlasHeight = 1
         function findWidthFit(): boolean {
           let bestSpace: Space | undefined = undefined
           for (const space of spaces) {
-            if (space.width !== frame.spriteFrame.width) continue
-            if (space.height < frame.spriteFrame.height) continue
+            if (space.width !== frame.requiredWidth) continue
+            if (space.height < frame.requiredHeight) continue
             if (bestSpace && bestSpace.height < space.height) continue
             bestSpace = space
           }
@@ -403,9 +409,9 @@ const atlasHeight = 1
           spaces.splice(spaces.indexOf(bestSpace), 1)
           spaces.push({
             x: bestSpace.x,
-            y: bestSpace.y + frame.spriteFrame.height,
+            y: bestSpace.y + frame.requiredHeight,
             width: bestSpace.width,
-            height: bestSpace.height - frame.spriteFrame.height
+            height: bestSpace.height - frame.requiredHeight
           })
           return true
         }
@@ -413,8 +419,8 @@ const atlasHeight = 1
         function findHeightFit(): boolean {
           let bestSpace: Space | undefined = undefined
           for (const space of spaces) {
-            if (space.height !== frame.spriteFrame.height) continue
-            if (space.width < frame.spriteFrame.width) continue
+            if (space.height !== frame.requiredHeight) continue
+            if (space.width < frame.requiredWidth) continue
             if (bestSpace && bestSpace.width < space.width) continue
             bestSpace = space
           }
@@ -426,15 +432,15 @@ const atlasHeight = 1
           })
           spaces.splice(spaces.indexOf(bestSpace), 1)
           spaces.push({
-            x: bestSpace.x + frame.spriteFrame.width,
+            x: bestSpace.x + frame.requiredWidth,
             y: bestSpace.y,
-            width: bestSpace.width - frame.spriteFrame.width,
+            width: bestSpace.width - frame.requiredWidth,
             height: bestSpace.height
           })
           return true
         }
 
-        if (frame.spriteFrame.width >= frame.spriteFrame.height) {
+        if (frame.requiredWidth >= frame.requiredHeight) {
           found = findWidthFit() || findHeightFit()
         } else {
           found = findHeightFit() || findWidthFit()
@@ -444,9 +450,9 @@ const atlasHeight = 1
           // Find the "most awkward" space for this frame, even if it wastes space to right and bottom; it might still get filled.
           let bestSpace: Space | undefined = undefined
           for (const space of spaces) {
-            if (space.width < frame.spriteFrame.width) continue
-            if (space.height < frame.spriteFrame.height) continue
-            if (bestSpace && Math.min(bestSpace.width - frame.spriteFrame.width, bestSpace.height - frame.spriteFrame.height) < Math.min(space.width - frame.spriteFrame.width, space.height - frame.spriteFrame.height)) continue
+            if (space.width < frame.requiredWidth) continue
+            if (space.height < frame.requiredHeight) continue
+            if (bestSpace && Math.min(bestSpace.width - frame.requiredWidth, bestSpace.height - frame.requiredHeight) < Math.min(space.width - frame.requiredWidth, space.height - frame.requiredHeight)) continue
             bestSpace = space
           }
           if (!bestSpace) {
@@ -460,31 +466,31 @@ const atlasHeight = 1
             unpacked: frame
           })
           spaces.splice(spaces.indexOf(bestSpace), 1)
-          if (bestSpace.width - frame.spriteFrame.width > bestSpace.height - frame.spriteFrame.height) {
+          if (bestSpace.width - frame.requiredWidth > bestSpace.height - frame.requiredHeight) {
             spaces.push({
-              x: bestSpace.x + frame.spriteFrame.width,
+              x: bestSpace.x + frame.requiredWidth,
               y: bestSpace.y,
-              width: bestSpace.width - frame.spriteFrame.width,
+              width: bestSpace.width - frame.requiredWidth,
               height: bestSpace.height
             })
             spaces.push({
               x: bestSpace.x,
-              y: bestSpace.y + frame.spriteFrame.height,
-              width: frame.spriteFrame.width,
-              height: bestSpace.height - frame.spriteFrame.height
+              y: bestSpace.y + frame.requiredHeight,
+              width: frame.requiredWidth,
+              height: bestSpace.height - frame.requiredHeight
             })
           } else {
             spaces.push({
               x: bestSpace.x,
-              y: bestSpace.y + frame.spriteFrame.height,
+              y: bestSpace.y + frame.requiredHeight,
               width: bestSpace.width,
-              height: bestSpace.height - frame.spriteFrame.height
+              height: bestSpace.height - frame.requiredHeight
             })
             spaces.push({
-              x: bestSpace.x + frame.spriteFrame.width,
+              x: bestSpace.x + frame.requiredWidth,
               y: bestSpace.y,
-              width: bestSpace.width - frame.spriteFrame.width,
-              height: frame.spriteFrame.height
+              width: bestSpace.width - frame.requiredWidth,
+              height: frame.requiredHeight
             })
           }
         }
@@ -494,8 +500,8 @@ const atlasHeight = 1
         continue
       }
 
-      const width = Math.max.apply(Math, packedFrames.map(frame => frame.x + frame.unpacked.spriteFrame.width))
-      const height = Math.max.apply(Math, packedFrames.map(frame => frame.y + frame.unpacked.spriteFrame.height))
+      const width = Math.max.apply(Math, packedFrames.map(frame => frame.x + frame.unpacked.requiredWidth))
+      const height = Math.max.apply(Math, packedFrames.map(frame => frame.y + frame.unpacked.requiredHeight))
       const atlas = new pngjs.PNG({
         width,
         height
