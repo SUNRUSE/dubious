@@ -9,8 +9,8 @@ function initial(): State {
   return null
 }
 
-function elapsed(state: State, deltaSeconds: number): void {
+function elapsed(deltaSeconds: number): void {
 }
 
-function render(state: State): void {
+function render(): void {
 }

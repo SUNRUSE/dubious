@@ -48,7 +48,7 @@ function onFrame(time: number): void {
   animationFrame = null
 
   if (previousTime !== null) {
-    elapsed(state, Math.max(0, Math.min(0.1, (time - previousTime) / 1000)))
+    elapsed(Math.max(0, Math.min(0.1, (time - previousTime) / 1000)))
   }
   previousTime = time
 
@@ -79,7 +79,7 @@ function onFrame(time: number): void {
   translateXY(ndcScaleX * targetWidth / -2, ndcScaleY * targetHeight / -2)
   scaleXY(ndcScaleX, ndcScaleY)
 
-  render(state)
+  render()
 
   flushBatch()
   animationFrame = requestAnimationFrame(onFrame)
