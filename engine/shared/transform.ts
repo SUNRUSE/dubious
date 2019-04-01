@@ -59,9 +59,9 @@ class Transform {
     const xy = this.xy
     const yx = this.yx
     const yy = this.yy
-    this.xx = xx * cos - xy * sin
-    this.yx = xy * cos + xx * sin
-    this.xy = yx * cos - yy * sin
-    this.yy = yy * cos + yx * sin
+    this.xx = xx * cos + xy * sin
+    this.yx = xy * cos - xx * sin
+    this.xy = yx * cos + yy * sin
+    this.yy = yy * cos - yx * sin
   }
 }
