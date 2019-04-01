@@ -28,14 +28,14 @@ class Sprite {
     offsetLeft: number,
     offsetTop: number
   ) {
-    this.xMin = offsetLeft
-    this.yMin = offsetTop
-    this.uMin = atlasLeft / atlasWidth
-    this.vMin = atlasTop / atlasHeight
-    this.xMax = offsetLeft + width
-    this.yMax = offsetTop + height
-    this.uMax = (atlasLeft + width) / atlasWidth
-    this.vMax = (atlasTop + height) / atlasHeight
+    this.xMin = offsetLeft - 0.5
+    this.yMin = offsetTop - 0.5
+    this.uMin = (atlasLeft - 0.5) / atlasWidth
+    this.vMin = (atlasTop - 0.5) / atlasHeight
+    this.xMax = offsetLeft + width + 0.5
+    this.yMax = offsetTop + height + 0.5
+    this.uMax = (atlasLeft + width + 0.5) / atlasWidth
+    this.vMax = (atlasTop + height + 0.5) / atlasHeight
   }
 
   draw(gl: WebGLRenderingContext): void {
