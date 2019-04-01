@@ -37,6 +37,6 @@
     "tempfile": "2.0.0",
     "ts-node": "8.0.3",
     "typescript": "3.4.1",
-    "uglify-js": "3.5.2"
+    "uglify-js": "3.5.3"
   }
 }
