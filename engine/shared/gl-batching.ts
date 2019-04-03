@@ -159,7 +159,8 @@ function flushBatch(): void {
   batchProgram.attributes.aLocation(16, 0)
   batchProgram.attributes.aTextureCoordinate(16, 8)
   batchIndices.bind()
-  batchProgram.uniforms.uTexture(batchTexture)
-  gl.drawElements(GlConstants.TRIANGLES, batchProgress * 6, GlConstants.UNSIGNED_SHORT, 0)
+  if (batchProgram.uniforms.uTexture(batchTexture)) {
+    gl.drawElements(GlConstants.TRIANGLES, batchProgress * 6, GlConstants.UNSIGNED_SHORT, 0)
+  }
   batchProgress = 0
 }
