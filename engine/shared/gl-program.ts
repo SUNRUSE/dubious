@@ -11,14 +11,14 @@ const textureConstants = [
 ]
 
 interface GlUniform {
-  readonly float: GlFloat
-  readonly vec2: GlVec2
-  readonly vec3: GlVec3
-  readonly vec4: GlVec4
-  readonly mat2: GlMat2
-  readonly mat3: GlMat3
-  readonly mat4: GlMat4
-  readonly sampler2D: GlTexture
+  float(value: GlFloat): void
+  vec2(value: GlVec2): void
+  vec3(value: GlVec3): void
+  vec4(value: GlVec4): void
+  mat2(value: GlMat2): void
+  mat3(value: GlMat3): void
+  mat4(value: GlMat4): void
+  sampler2D(value: GlTexture): void
 }
 
 class GlProgram<TUniform extends {
@@ -50,7 +50,7 @@ class GlProgram<TUniform extends {
   private attributeIndicesArray: null | number[]
 
   readonly uniforms: {
-    readonly [key in keyof TUniform]: (value: GlUniform[TUniform[key]]) => void
+    readonly [key in keyof TUniform]: GlUniform[TUniform[key]]
   }
 
   readonly attributes: {
@@ -81,7 +81,7 @@ class GlProgram<TUniform extends {
     this.fragmentSource = `precision mediump float;${lineSeparator}${header}${fragmentSource.join(lineSeparator)}${footer}`
 
     const uniformFunctions: {
-      [key: string]: (value: GlUniform[keyof GlUniform]) => void
+      [key: string]: GlUniform[keyof GlUniform]
     } = {}
 
     let textures = 0
@@ -156,7 +156,7 @@ class GlProgram<TUniform extends {
       }
     }
     this.uniforms = uniformFunctions as {
-      readonly [key in keyof TUniform]: (value: GlUniform[TUniform[key]]) => void
+      readonly [key in keyof TUniform]: GlUniform[TUniform[key]]
     }
 
     const attributeFunctions: {
