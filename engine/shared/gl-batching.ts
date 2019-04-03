@@ -66,60 +66,31 @@ type CachedBatchSprite = {
 
 let writingBatchCache: null | CachedBatchSprite[] = null
 
-const activeBatchCaches: BatchCache[] = []
-
-function refreshBatchCaches(): void {
-  writingBatchCache = null
-  for (let i = 0; i < activeBatchCaches.length;) {
-    if (activeBatchCaches[i].checkActive()) {
-      i++
-    }
-  }
-}
-
-class BatchCache {
-  private active = false
-  private usagesThisFrame = 0
-  private cached: null | ReadonlyArray<CachedBatchSprite> = null
-
+class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
   constructor(
     private readonly content: () => void
-  ) { }
-
-  keepAlive(): void {
-    if (!this.active) {
-      activeBatchCaches.push(this)
-      this.active = true
-    }
-    this.usagesThisFrame++
+  ) {
+    super()
   }
 
-  checkActive(): boolean {
-    if (this.usagesThisFrame === 0) {
-      activeBatchCaches.splice(activeBatchCaches.indexOf(this), 1)
-      this.active = false
-      this.cached = null
-    }
-    this.usagesThisFrame = 0
-    return this.active
-  }
-
-  draw() {
+  create(): ReadonlyArray<CachedBatchSprite> {
     if (writingBatchCache !== null) {
       throw new Error(`Cannot nest BatchCache draw calls`)
     }
 
-    this.keepAlive()
+    const output = writingBatchCache = []
+    pushTransformStack(true)
+    this.content()
+    popTransformStack()
+    writingBatchCache = null
 
-    if (this.cached === null) {
-      this.cached = writingBatchCache = []
-      pushTransformStack(true)
-      this.content()
-      popTransformStack()
-      writingBatchCache = null
-    }
+    return output
+  }
 
-    for (const sprite of this.cached) {
+  dispose(cached: ReadonlyArray<CachedBatchSprite>): void { }
+
+  draw() {
+    for (const sprite of this.get()) {
       drawBatch(
         sprite.texture,
         currentTransform.applyX(sprite.x1, sprite.y1), currentTransform.applyY(sprite.x1, sprite.y1), sprite.u1, sprite.v1,

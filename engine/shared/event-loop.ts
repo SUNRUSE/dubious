@@ -63,7 +63,6 @@ function onFrame(time: number): void {
   gl.blendFunc(GlConstants.SRC_ALPHA, GlConstants.ONE_MINUS_SRC_ALPHA)
 
   resetTransformStack()
-  refreshBatchCaches()
   purgeFrameCaches()
 
   const targetAspectRatio = targetWidth / targetHeight
