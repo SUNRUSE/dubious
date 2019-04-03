@@ -60,7 +60,7 @@ const exported: types.PurposeImplementation["background"] = {
             resolvedAsepritePath,
             [
               `--batch`, content.source,
-              `--save-as`, paths.importedFile(content, `{frame}.png`),
+              `--save-as`, paths.importedFile(content, `0.png`),
               `--data`, dataPath,
               `--list-tags`,
               `--format`, `json-array`,
