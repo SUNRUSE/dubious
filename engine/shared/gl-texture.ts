@@ -38,5 +38,5 @@ type GlTextureMagFilter =
   | GlConstants.LINEAR_MIPMAP_LINEAR
 
 type GlTexture = {
-  bind(): void
+  bind(): boolean
 }

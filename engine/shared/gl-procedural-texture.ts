@@ -16,7 +16,7 @@ class GlProceduralTexture implements GlTexture {
     private readonly pixelsFactory: () => ArrayBufferView
   ) { }
 
-  bind(): void {
+  bind(): boolean {
     if (this.contextId != contextId) {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)
@@ -32,5 +32,6 @@ class GlProceduralTexture implements GlTexture {
     } else {
       gl.bindTexture(this.target, this.texture)
     }
+    return true
   }
 }

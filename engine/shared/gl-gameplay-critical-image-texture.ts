@@ -29,7 +29,7 @@ class GlGameplayCriticalImageTexture {
     totalGameplayCriticalContent++
   }
 
-  bind(): void {
+  bind(): boolean {
     if (this.contextId != contextId) {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)
@@ -45,5 +45,6 @@ class GlGameplayCriticalImageTexture {
     } else {
       gl.bindTexture(this.target, this.texture)
     }
+    return true
   }
 }
