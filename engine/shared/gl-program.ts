@@ -18,7 +18,7 @@ interface GlUniform {
   mat2(value: GlMat2): void
   mat3(value: GlMat3): void
   mat4(value: GlMat4): void
-  sampler2D(value: GlTexture): void
+  sampler2D(value: GlTexture): boolean
 }
 
 class GlProgram<TUniform extends {
@@ -144,12 +144,15 @@ class GlProgram<TUniform extends {
           const index = textures
           const textureConstant = textureConstants[index]
           textures++
-          uniformFunctions[key] = (value: GlTexture): void => {
+          uniformFunctions[key] = (value: GlTexture): boolean => {
             if (this.contextId == contextId) {
               gl.activeTexture(textureConstant)
-              value.bind()
+              if (!value.bind()) {
+                return false
+              }
               gl.uniform1i(this.uniformLocations[key], index)
             }
+            return true
           }
 
           break
