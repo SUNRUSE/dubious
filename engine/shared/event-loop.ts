@@ -64,6 +64,7 @@ function onFrame(time: number): void {
 
   resetTransformStack()
   refreshBatchCaches()
+  purgeFrameCaches()
 
   const targetAspectRatio = targetWidth / targetHeight
   const actualAspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight
