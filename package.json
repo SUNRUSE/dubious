@@ -17,7 +17,6 @@
     "@types/rimraf": "2.0.2",
     "@types/tempfile": "2.0.0",
     "chokidar": "2.1.5",
-    "commander": "2.19.0",
     "csv-parser": "2.2.0",
     "emflac": "0.2.0",
     "exec-buffer": "3.2.0",
