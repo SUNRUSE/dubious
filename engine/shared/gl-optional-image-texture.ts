@@ -59,3 +59,41 @@ class GlOptionalImageTexture {
     return false
   }
 }
+
+class GlFrameCachedOptionalImageTexture extends FrameCache<GlOptionalImageTexture> {
+  constructor(
+    private readonly path: string,
+    private readonly target: GlTextureTarget,
+    private readonly format: GlTextureFormat,
+    private readonly type: GlTextureType,
+    private readonly textureWrapS: GlTextureWrap,
+    private readonly textureWrapT: GlTextureWrap,
+    private readonly minFilter: GlTextureMinFilter,
+    private readonly magFilter: GlTextureMagFilter,
+    private readonly generateMipmap: boolean
+  ) {
+    super()
+  }
+
+  create(): GlOptionalImageTexture {
+    return new GlOptionalImageTexture(
+      this.path,
+      this.target,
+      this.format,
+      this.type,
+      this.textureWrapS,
+      this.textureWrapT,
+      this.minFilter,
+      this.magFilter,
+      this.generateMipmap
+    )
+  }
+
+  dispose(cached: GlOptionalImageTexture): void {
+    cached.unload()
+  }
+
+  bind(): boolean {
+    return this.get().bind()
+  }
+}
