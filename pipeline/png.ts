@@ -138,11 +138,11 @@ export function trim(png: pngjs.PNG): null | {
   }
 
   const trimmed = new pngjs.PNG({
-    width: bounds.width,
-    height: bounds.height
+    width: bounds.width + 2,
+    height: bounds.height + 2
   })
 
-  png.bitblt(trimmed, bounds.left, bounds.top, bounds.width, bounds.height, 0, 0)
+  png.bitblt(trimmed, bounds.left, bounds.top, bounds.width, bounds.height, 1, 1)
 
   return {
     left: bounds.left,
