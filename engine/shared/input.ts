@@ -211,6 +211,7 @@ function keyIsIdentified(code: string): null | Key {
 }
 
 onkeydown = e => {
+  onFirstUserInteraction()
   const key = keyIsIdentified(e.code)
   if (key !== null) {
     if (heldKeys.indexOf(key) === -1) {
