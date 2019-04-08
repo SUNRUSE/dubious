@@ -1,6 +1,7 @@
 let animationFrame: null | number = null
 let previousTime: null | number = null
 
+let elapsedSeconds = 0
 let state: State
 
 function checkEventLoop(): void {
@@ -48,7 +49,9 @@ function onFrame(time: number): void {
   animationFrame = null
 
   if (previousTime !== null) {
-    elapsed(Math.max(0, Math.min(0.1, (time - previousTime) / 1000)))
+    const deltaSeconds = Math.max(0, Math.min(0.1, (time - previousTime) / 1000))
+    elapsed(deltaSeconds)
+    elapsedSeconds += deltaSeconds
   }
   previousTime = time
 
