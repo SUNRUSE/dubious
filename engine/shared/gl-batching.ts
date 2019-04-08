@@ -87,6 +87,8 @@ class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
     return output
   }
 
+  update(cached: ReadonlyArray<CachedBatchSprite>): void { }
+
   dispose(cached: ReadonlyArray<CachedBatchSprite>): void { }
 
   draw() {

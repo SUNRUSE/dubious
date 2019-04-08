@@ -17,6 +17,10 @@ class FrameCache<T> {
     throw new Error(`FrameCache<T>.create is not implemented`)
   }
 
+  update(cached: T): void {
+    throw new Error(`FrameCache<T>.update is not implemented`)
+  }
+
   dispose(cached: T): void {
     throw new Error(`FrameCache<T>.dispose is not implemented`)
   }
@@ -33,6 +37,11 @@ class FrameCache<T> {
       if (cached !== null) {
         this.cached = null
         this.dispose(cached)
+      }
+    } else {
+      const cached = this.cached
+      if (cached !== null) {
+        this.update(cached)
       }
     }
     this.usagesThisFrame = 0

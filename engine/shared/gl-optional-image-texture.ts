@@ -89,6 +89,8 @@ class GlFrameCachedOptionalImageTexture extends FrameCache<GlOptionalImageTextur
     )
   }
 
+  update(cached: GlOptionalImageTexture): void { }
+
   dispose(cached: GlOptionalImageTexture): void {
     cached.unload()
   }
