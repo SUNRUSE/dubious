@@ -50,6 +50,7 @@ export type ImportedPurpose = {
     readonly segments: ReadonlyArray<string>
     readonly rawPath: string
     readonly channels: 1 | 2
+    readonly gain: number
   }
   readonly song: {
     readonly segments: ReadonlyArray<string>
@@ -107,7 +108,7 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 13
+export const stateVersion = 14
 
 export type State = {
   firstRun: boolean

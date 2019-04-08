@@ -26,7 +26,7 @@ const exported: types.PurposeImplementation["song"] = {
     const read = await audio.read(content)
     if (read) {
       const id = utilities.findNextId(common.ids)
-      await audio.write(read, paths.artifactsFile(`song-${id}`))
+      await audio.write(read.samples, paths.artifactsFile(`song-${id}`))
       return [{
         segments: utilities.preprocessSegments(content.segments, []),
         id

@@ -31,7 +31,7 @@ const exported: types.PurposeImplementation["sound"] = {
     if (read) {
       const rawPath = paths.importedFile(content, `raw.bin`)
       await mkdirp(paths.importedDirectory(content))
-      const asFloat32Array = new Float32Array(read.length === 2 ? read[0].concat(read[1]) : read[0])
+      const asFloat32Array = new Float32Array(read.samples.length === 2 ? read.samples[0].concat(read.samples[1]) : read.samples[0])
       cache.set(rawPath, Promise.resolve(asFloat32Array))
       await fsWriteFile(
         rawPath,
@@ -40,7 +40,8 @@ const exported: types.PurposeImplementation["sound"] = {
       return [{
         segments: utilities.preprocessSegments(content.segments, []),
         rawPath,
-        channels: read.length
+        channels: read.samples.length,
+        gain: read.gain
       }]
     } else {
       return []

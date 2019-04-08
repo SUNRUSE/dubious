@@ -49,7 +49,10 @@ const fsWriteFile = util.promisify(fs.writeFile)
 
 export async function read(
   fromContent: types.ContentReference<string, "wav" | "flac">
-): Promise<null | [number[]] | [number[], number[]]> {
+): Promise<null | {
+  readonly gain: number
+  readonly samples: [number[]] | [number[], number[]]
+}> {
   const rawFile = await fsReadFile(fromContent.source)
   const asWav = fromContent.extension === `flac`
     ? Buffer.from(emflacDecode.decodeSync(rawFile))
@@ -107,9 +110,15 @@ export async function read(
 
   switch (channels.length) {
     case 1:
-      return [channels[0]]
+      return {
+        gain,
+        samples: [channels[0]]
+      }
     case 2:
-      return [channels[0], channels[1]]
+      return {
+        gain,
+        samples: [channels[0], channels[1]]
+      }
     default:
       throw new Error(`Impossible, but required by Typescript.`)
   }
