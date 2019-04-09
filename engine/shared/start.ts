@@ -1,28 +1,13 @@
-type Quicksave = {
-  readonly elapsedSeconds: number
-  readonly state: State
-}
-
 onload = function () {
   loadedGameplayCriticalContent++
   initializeSaveLoad()
   const quicksavePath = `${localStoragePrefix}-quicksave`
-  const quicksave = loadDirect<Quicksave>(quicksavePath)
+  const quicksave = loadDirect<State>(quicksavePath)
   dropDirect(quicksavePath)
-  if (quicksave === undefined) {
-    state = initial()
-  } else {
-    elapsedSeconds = quicksave.elapsedSeconds
-    state = quicksave.state
-  }
-
+  state = quicksave !== undefined ? quicksave : initial()
   onbeforeunload = () => {
-    saveDirect(quicksavePath, {
-      elapsedSeconds,
-      state
-    })
+    saveDirect(quicksavePath, state)
   }
-
   checkEventLoop()
 }
 checkEventLoop()
