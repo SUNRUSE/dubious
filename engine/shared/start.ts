@@ -19,6 +19,7 @@ function onFirstUserInteraction() {
   }
 
   waitingForUserInteraction = false
+  initializeWebAudioApi()
 }
 onmousedown = onFirstUserInteraction
 ontouchstart = onFirstUserInteraction

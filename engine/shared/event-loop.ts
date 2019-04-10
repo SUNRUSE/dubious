@@ -38,6 +38,10 @@ function checkEventLoop(): void {
     previousTime = null
     waitingForUserInteraction = true
     purgeFrameCaches()
+    if (audioContext !== null) {
+      audioContext.close()
+      audioContext = null
+    }
     hideCanvas()
     if (animationFrame !== null) {
       cancelAnimationFrame(animationFrame)
