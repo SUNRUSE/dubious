@@ -15,6 +15,7 @@
 /// <reference path="gl-buffer.ts" />
 /// <reference path="gl-program.ts" />
 /// <reference path="gl-batching.ts" />
+/// <reference path="audio.ts" />
 /// <reference path="content.ts" />
 /// <reference path="font.ts" />
 /// <reference path="border.ts" />
