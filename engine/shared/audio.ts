@@ -54,6 +54,8 @@ function initializeWebAudioApi(): void {
   audioContext = absoluteAudioContext
   channelMerger = absoluteAudioContext.createChannelMerger(2)
   channelMerger.connect(absoluteAudioContext.destination)
+
+  previousTime = null
 }
 
 type FileAudioBufferInstanceContents = {

@@ -53,9 +53,16 @@ function checkEventLoop(): void {
 function onFrame(time: number): void {
   animationFrame = null
 
-  if (previousTime !== null) {
-    elapsed(Math.max(0, Math.min(0.1, (time - previousTime) / 1000)))
+  if (audioContext !== null) {
+    time = audioContext.currentTime
+  } else {
+    time /= 1000
   }
+
+  if (previousTime !== null) {
+    elapsed(Math.max(0, Math.min(0.1, time - previousTime)))
+  }
+
   previousTime = time
 
   const gl = getGl()
