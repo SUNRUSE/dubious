@@ -36,6 +36,7 @@ function checkEventLoop(): void {
 
   function pause(): void {
     previousTime = null
+    waitingForUserInteraction = true
     hideCanvas()
     if (animationFrame !== null) {
       cancelAnimationFrame(animationFrame)
