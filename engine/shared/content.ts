@@ -143,7 +143,7 @@ class Sound {
   private readonly fileAudioBufferPlayInstancePool: FileAudioBufferPlayInstancePool
 
   constructor(
-  startSamples: number,
+    startSamples: number,
     durationSamples: number,
     leftGain: number,
     rightGain: number
@@ -162,7 +162,7 @@ class Sound {
     elapsedSeconds: number,
     leftGain: number,
     rightGain: number
-): void {
+  ): void {
     this.fileAudioBufferPlayInstancePool.play(
       startSeconds,
       elapsedSeconds,
@@ -172,10 +172,26 @@ class Sound {
   }
 }
 
-}
+class Song {
+  private readonly fileAudioBufferLoopInstancePool: FileAudioBufferLoopInstancePool
 
-function engineSong(
-  id: number
-): void {
+  constructor(
+    id: number,
+    leftGain: number,
+    rightGain: number
+  ) {
+    this.fileAudioBufferLoopInstancePool = new FileAudioBufferLoopInstancePool(
+      new FileAudioBuffer(`song-${id}`),
+      leftGain,
+      rightGain
+    )
+  }
 
+  play(
+    startSeconds: number,
+    elapsedSeconds: number,
+    gain: number
+  ): void {
+    this.fileAudioBufferLoopInstancePool.play(startSeconds, elapsedSeconds, gain, gain)
+  }
 }
