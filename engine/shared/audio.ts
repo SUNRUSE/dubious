@@ -139,7 +139,7 @@ class FileAudioBufferPlayInstancePool {
     leftGain: number,
     rightGain: number
   ): void {
-    if (!audioContext) {
+    if (audioContext === null) {
       return
     }
 

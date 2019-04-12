@@ -14,7 +14,7 @@ class GlBuffer {
   ) { }
 
   bind(): void {
-    if (this.contextId != contextId) {
+    if (this.contextId !== contextId) {
       this.buffer = gl.createBuffer()
       gl.bindBuffer(this.target, this.buffer)
       gl.bufferData(this.target, this.dataFactory(), this.usage)

@@ -119,7 +119,7 @@ export default async function (
     }
 
     selectedLocalization = metadata.localizations
-      .find(localization => localization.localization == settings.localization)
+      .find(localization => localization.localization === settings.localization)
       || selectedLocalization
 
     if (logoPath !== null) {

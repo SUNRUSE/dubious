@@ -30,7 +30,7 @@ class GlGameplayCriticalImageTexture {
   }
 
   bind(): boolean {
-    if (this.contextId != contextId) {
+    if (this.contextId !== contextId) {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)
       gl.texImage2D(this.target, 0, this.format, this.format, this.type, this.htmlImageElement)

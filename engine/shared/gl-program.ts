@@ -66,7 +66,7 @@ class GlProgram<TUniform extends {
   ) {
     const lineSeparator = development ? `\n` : ``
 
-    const describeSize = (size: 1 | 2 | 3 | 4): string => size == 1
+    const describeSize = (size: 1 | 2 | 3 | 4): string => size === 1
       ? `float`
       : `vec${size}`
 
@@ -90,62 +90,62 @@ class GlProgram<TUniform extends {
       switch (uniforms[key]) {
         case `float`:
           uniformFunctions[key] = (value: GlFloat): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniform1f(this.uniformLocations[key], value)
             }
           }
           break
         case `vec2`:
           uniformFunctions[key] = (value: GlVec2): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniform2fv(this.uniformLocations[key], value)
             }
           }
           break
         case `vec3`:
           uniformFunctions[key] = (value: GlVec3): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniform3fv(this.uniformLocations[key], value)
             }
           }
           break
         case `vec4`:
           uniformFunctions[key] = (value: GlVec4): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniform4fv(this.uniformLocations[key], value)
             }
           }
           break
         case `mat2`:
           uniformFunctions[key] = (value: GlMat2): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniformMatrix2fv(this.uniformLocations[key], false, value)
             }
           }
           break
         case `mat3`:
           uniformFunctions[key] = (value: GlMat3): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniformMatrix3fv(this.uniformLocations[key], false, value)
             }
           }
           break
         case `mat4`:
           uniformFunctions[key] = (value: GlMat4): void => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.uniformMatrix4fv(this.uniformLocations[key], false, value)
             }
           }
           break
         case `sampler2D`:
-          if (textures == textureConstants.length) {
+          if (textures === textureConstants.length) {
             throw new Error(`Too many texture samplers in a program`)
           }
           const index = textures
           const textureConstant = textureConstants[index]
           textures++
           uniformFunctions[key] = (value: GlTexture): boolean => {
-            if (this.contextId == contextId) {
+            if (this.contextId === contextId) {
               gl.activeTexture(textureConstant)
               if (!value.bind()) {
                 return false
@@ -168,7 +168,7 @@ class GlProgram<TUniform extends {
     for (const key in attributes) {
       attributeFunctions[key] = (stride: number, offset: number): void => {
         const index = this.attributeIndices[key]
-        if (this.contextId == contextId && index != null) {
+        if (this.contextId === contextId && index !== null) {
           gl.vertexAttribPointer(index, attributes[key].size, attributes[key].type, attributes[key].normalized, stride, offset)
         }
       }
@@ -179,7 +179,7 @@ class GlProgram<TUniform extends {
   }
 
   bind(): void {
-    if (this.contextId != contextId) {
+    if (this.contextId !== contextId) {
       this.program = gl.createProgram()
       if (!this.program) {
         return
@@ -246,12 +246,12 @@ class GlProgram<TUniform extends {
     if (this.attributeIndicesArray) {
       if (activeAttributeIndices) {
         for (const attribute of activeAttributeIndices) {
-          if (this.attributeIndicesArray.indexOf(attribute) == -1) {
+          if (this.attributeIndicesArray.indexOf(attribute) === -1) {
             gl.disableVertexAttribArray(attribute)
           }
         }
         for (const attribute of this.attributeIndicesArray) {
-          if (activeAttributeIndices.indexOf(attribute) == -1) {
+          if (activeAttributeIndices.indexOf(attribute) === -1) {
             gl.enableVertexAttribArray(attribute)
           }
         }

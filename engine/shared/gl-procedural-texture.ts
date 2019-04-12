@@ -17,7 +17,7 @@ class GlProceduralTexture implements GlTexture {
   ) { }
 
   bind(): boolean {
-    if (this.contextId != contextId) {
+    if (this.contextId !== contextId) {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)
       gl.texImage2D(this.target, 0, this.format, this.width, this.height, 0, this.format, this.type, this.pixelsFactory())
