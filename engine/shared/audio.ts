@@ -58,6 +58,40 @@ function initializeWebAudioApi(): void {
   previousTime = null
 }
 
+function connectToChannelMerger(
+  audioBuffer: AudioBuffer,
+  audioBufferSourceNode: AudioBufferSourceNode
+): FileAudioBufferInstanceContents {
+  if (audioContext === null) {
+    throw new Error(`The Web Audio API context was expected to be available, but was not.`)
+  }
+
+  const leftGainNode = audioContext.createGain()
+  leftGainNode.gain.value = 0
+  const rightGainNode = audioContext.createGain()
+  rightGainNode.gain.value = 0
+
+  if (audioBuffer.numberOfChannels === 2) {
+    const channelSplitter = audioContext.createChannelSplitter(2)
+    audioBufferSourceNode.connect(channelSplitter)
+    channelSplitter.connect(leftGainNode, 0, 0)
+    channelSplitter.connect(rightGainNode, 1, 0)
+  } else {
+    audioBufferSourceNode.connect(leftGainNode)
+    audioBufferSourceNode.connect(rightGainNode)
+  }
+
+  leftGainNode.connect(channelMerger, 0, 0)
+  rightGainNode.connect(channelMerger, 0, 1)
+
+  return {
+    leftGain: 0,
+    leftGainNode,
+    rightGain: 0,
+    rightGainNode
+  }
+}
+
 type FileAudioBufferInstanceContents = {
   leftGain: number
   readonly leftGainNode: GainNode
@@ -80,31 +114,18 @@ class FileAudioBufferPlayInstance extends FrameCache<FileAudioBufferInstanceCont
       throw new Error(`The Web Audio API context was expected to be available, but was not.`)
     }
 
-    const source = audioContext.createBufferSource()
-    source.buffer = this.audioBuffer
-    const channelSplitter = audioContext.createChannelSplitter(2)
-    const leftGainNode = audioContext.createGain()
-    leftGainNode.gain.value = 0
-    const rightGainNode = audioContext.createGain()
-    rightGainNode.gain.value = 0
+    const audioBufferSourceNode = audioContext.createBufferSource()
+    audioBufferSourceNode.buffer = this.audioBuffer
 
-    source.connect(channelSplitter)
-    channelSplitter.connect(leftGainNode, 0, 0)
-    channelSplitter.connect(rightGainNode, 1, 0)
-    leftGainNode.connect(channelMerger, 0, 0)
-    rightGainNode.connect(channelMerger, 0, 1)
+    const output = connectToChannelMerger(this.audioBuffer, audioBufferSourceNode)
 
-    source.start(
+    audioBufferSourceNode.start(
       this.startSeconds + this.skipSeconds,
       this.fileAudioBufferPlayInstancePool.startSeconds + this.skipSeconds,
       this.fileAudioBufferPlayInstancePool.durationSeconds - this.skipSeconds
     )
-    return {
-      leftGain: 0,
-      leftGainNode,
-      rightGain: 0,
-      rightGainNode
-    }
+
+    return output
   }
 
   update(cached: FileAudioBufferInstanceContents): void {
@@ -193,28 +214,15 @@ class FileAudioBufferLoopInstance extends FrameCache<FileAudioBufferInstanceCont
       throw new Error(`The Web Audio API context was expected to be available, but was not.`)
     }
 
-    const source = audioContext.createBufferSource()
-    source.loop = true
-    source.buffer = this.audioBuffer
-    const channelSplitter = audioContext.createChannelSplitter(2)
-    const leftGainNode = audioContext.createGain()
-    leftGainNode.gain.value = 0
-    const rightGainNode = audioContext.createGain()
-    rightGainNode.gain.value = 0
+    const audioBufferSourceNode = audioContext.createBufferSource()
+    audioBufferSourceNode.loop = true
+    audioBufferSourceNode.buffer = this.audioBuffer
 
-    source.connect(channelSplitter)
-    channelSplitter.connect(leftGainNode, 0, 0)
-    channelSplitter.connect(rightGainNode, 1, 0)
-    leftGainNode.connect(channelMerger, 0, 0)
-    rightGainNode.connect(channelMerger, 0, 1)
+    const output = connectToChannelMerger(this.audioBuffer, audioBufferSourceNode)
 
-    source.start(this.startSeconds, this.loopProgressSeconds)
-    return {
-      leftGain: 0,
-      leftGainNode,
-      rightGain: 0,
-      rightGainNode
-    }
+    audioBufferSourceNode.start(this.startSeconds, this.loopProgressSeconds)
+
+    return output
   }
 
   update(cached: FileAudioBufferInstanceContents): void {
