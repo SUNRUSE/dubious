@@ -164,12 +164,16 @@ class FileAudioBufferInstancePool {
       return
     }
 
-    this.instances.push(new FileAudioBufferInstance(
+    const instance = new FileAudioBufferInstance(
       this,
       audioBuffer,
       startSeconds,
       skipSeconds
-    ))
+    )
+    this.instances.push(instance)
+    const instanceContent = instance.get()
+    instanceContent.leftGain += leftGain
+    instanceContent.rightGain += rightGain
   }
 }
 
