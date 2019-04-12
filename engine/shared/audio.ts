@@ -65,9 +65,9 @@ type FileAudioBufferInstanceContents = {
   readonly rightGainNode: GainNode
 }
 
-class FileAudioBufferInstance extends FrameCache<FileAudioBufferInstanceContents> {
+class FileAudioBufferPlayInstance extends FrameCache<FileAudioBufferInstanceContents> {
   constructor(
-    private readonly fileAudioBufferInstancePool: FileAudioBufferInstancePool,
+    private readonly fileAudioBufferPlayInstancePool: FileAudioBufferPlayInstancePool,
     private readonly audioBuffer: AudioBuffer,
     readonly startSeconds: number,
     private readonly skipSeconds: number
@@ -96,8 +96,8 @@ class FileAudioBufferInstance extends FrameCache<FileAudioBufferInstanceContents
 
     source.start(
       this.startSeconds + this.skipSeconds,
-      this.fileAudioBufferInstancePool.startSeconds + this.skipSeconds,
-      this.fileAudioBufferInstancePool.durationSeconds - this.skipSeconds
+      this.fileAudioBufferPlayInstancePool.startSeconds + this.skipSeconds,
+      this.fileAudioBufferPlayInstancePool.durationSeconds - this.skipSeconds
     )
     return {
       leftGain: 0,
@@ -108,8 +108,8 @@ class FileAudioBufferInstance extends FrameCache<FileAudioBufferInstanceContents
   }
 
   update(cached: FileAudioBufferInstanceContents): void {
-    cached.leftGainNode.gain.value = cached.leftGain * this.fileAudioBufferInstancePool.leftGain
-    cached.rightGainNode.gain.value = cached.rightGain * this.fileAudioBufferInstancePool.rightGain
+    cached.leftGainNode.gain.value = cached.leftGain * this.fileAudioBufferPlayInstancePool.leftGain
+    cached.rightGainNode.gain.value = cached.rightGain * this.fileAudioBufferPlayInstancePool.rightGain
     cached.leftGain = 0
     cached.rightGain = 0
   }
@@ -118,12 +118,12 @@ class FileAudioBufferInstance extends FrameCache<FileAudioBufferInstanceContents
     cached.leftGainNode.disconnect()
     cached.rightGainNode.disconnect()
 
-    this.fileAudioBufferInstancePool.instances.splice(this.fileAudioBufferInstancePool.instances.indexOf(this), 1)
+    this.fileAudioBufferPlayInstancePool.instances.splice(this.fileAudioBufferPlayInstancePool.instances.indexOf(this), 1)
   }
 }
 
-class FileAudioBufferInstancePool {
-  readonly instances: FileAudioBufferInstance[] = []
+class FileAudioBufferPlayInstancePool {
+  readonly instances: FileAudioBufferPlayInstance[] = []
 
   constructor(
     private readonly fileAudioBuffer: FileAudioBuffer,
@@ -164,11 +164,126 @@ class FileAudioBufferInstancePool {
       return
     }
 
-    const instance = new FileAudioBufferInstance(
+    const instance = new FileAudioBufferPlayInstance(
       this,
       audioBuffer,
       startSeconds,
       skipSeconds
+    )
+    this.instances.push(instance)
+    const instanceContent = instance.get()
+    instanceContent.leftGain += leftGain
+    instanceContent.rightGain += rightGain
+  }
+}
+
+class FileAudioBufferLoopInstance extends FrameCache<FileAudioBufferInstanceContents> {
+  constructor(
+    private readonly fileAudioBufferLoopInstancePool: FileAudioBufferLoopInstancePool,
+    private readonly audioBuffer: AudioBuffer,
+    private readonly startSeconds: number,
+    readonly loopProgressSeconds: number,
+    readonly now: number
+  ) {
+    super()
+  }
+
+  create(): FileAudioBufferInstanceContents {
+    if (audioContext === null) {
+      throw new Error(`The Web Audio API context was expected to be available, but was not.`)
+    }
+
+    const source = audioContext.createBufferSource()
+    source.loop = true
+    source.buffer = this.audioBuffer
+    const channelSplitter = audioContext.createChannelSplitter(2)
+    const leftGainNode = audioContext.createGain()
+    leftGainNode.gain.value = 0
+    const rightGainNode = audioContext.createGain()
+    rightGainNode.gain.value = 0
+
+    source.connect(channelSplitter)
+    channelSplitter.connect(leftGainNode, 0, 0)
+    channelSplitter.connect(rightGainNode, 1, 0)
+    leftGainNode.connect(channelMerger, 0, 0)
+    rightGainNode.connect(channelMerger, 0, 1)
+
+    source.start(this.startSeconds, this.loopProgressSeconds)
+    return {
+      leftGain: 0,
+      leftGainNode,
+      rightGain: 0,
+      rightGainNode
+    }
+  }
+
+  update(cached: FileAudioBufferInstanceContents): void {
+    cached.leftGainNode.gain.value = cached.leftGain * this.fileAudioBufferLoopInstancePool.leftGain
+    cached.rightGainNode.gain.value = cached.rightGain * this.fileAudioBufferLoopInstancePool.rightGain
+    cached.leftGain = 0
+    cached.rightGain = 0
+  }
+
+  dispose(cached: FileAudioBufferInstanceContents): void {
+    cached.leftGainNode.disconnect()
+    cached.rightGainNode.disconnect()
+
+    this.fileAudioBufferLoopInstancePool.instances.splice(this.fileAudioBufferLoopInstancePool.instances.indexOf(this), 1)
+  }
+}
+
+class FileAudioBufferLoopInstancePool {
+  readonly instances: FileAudioBufferLoopInstance[] = []
+
+  constructor(
+    private readonly fileAudioBuffer: FileAudioBuffer,
+    readonly leftGain: number,
+    readonly rightGain: number
+  ) { }
+
+  play(
+    startSeconds: number,
+    elapsedSeconds: number,
+    leftGain: number,
+    rightGain: number
+  ): void {
+    if (audioContext === null) {
+      return
+    }
+
+    const audioBuffer = this.fileAudioBuffer.get()
+    if (audioBuffer === null) {
+      return
+    }
+
+    if (startSeconds > elapsedSeconds) {
+      return
+    }
+
+    const now = audioContext.currentTime
+
+    const ourPlayingForSeconds = elapsedSeconds - startSeconds
+    const ourLoopProgressSeconds = ourPlayingForSeconds - Math.floor(ourPlayingForSeconds / audioBuffer.duration) * audioBuffer.duration
+
+    for (const instance of this.instances) {
+      const theirPlayingForSeconds = instance.loopProgressSeconds + now - instance.now
+      const theirLoopProgressSeconds = theirPlayingForSeconds - Math.floor(theirPlayingForSeconds / audioBuffer.duration) * audioBuffer.duration
+      const loopProgressSecondsDifference = Math.abs(theirLoopProgressSeconds - ourLoopProgressSeconds)
+      const inverseLoopProgressSecondsDifference = Math.abs(loopProgressSecondsDifference - audioBuffer.duration)
+      if (loopProgressSecondsDifference < 0.05 || inverseLoopProgressSecondsDifference < 0.05) {
+        const instanceContent = instance.get()
+        instanceContent.leftGain += leftGain
+        instanceContent.rightGain += rightGain
+        return
+      }
+    }
+
+    const instance = new FileAudioBufferLoopInstance(
+      this,
+      audioBuffer,
+      now,
+      ourLoopProgressSeconds,
+      now
     )
     this.instances.push(instance)
     const instanceContent = instance.get()
