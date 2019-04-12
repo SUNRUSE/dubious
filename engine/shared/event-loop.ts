@@ -78,6 +78,10 @@ function onFrame(time: number): void {
   resetTransformStack()
   purgeFrameCaches()
 
+  if (audioFormat !== null && audioContext !== null) {
+    atlasSound.get()
+  }
+
   const targetAspectRatio = targetWidth / targetHeight
   const actualAspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight
   let ndcScaleX: number

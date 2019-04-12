@@ -71,7 +71,7 @@ const exported: types.PurposeImplementation["sound"] = {
     for (const unpackedSound of unpackedSounds) {
       output.push({
         segments: unpackedSound.sound.segments,
-        code: `engineSound(${left.length}, ${unpackedSound.raw.length / unpackedSound.sound.channels})`
+        code: `new Sound(${left.length}, ${unpackedSound.raw.length / unpackedSound.sound.channels}, ${unpackedSound.sound.gain}, ${unpackedSound.sound.gain})`
       })
       if (unpackedSound.sound.channels === 1) {
         unpackedSound.raw.forEach(sample => left.push(sample))
