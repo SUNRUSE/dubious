@@ -55,6 +55,7 @@ export type ImportedPurpose = {
   readonly song: {
     readonly segments: ReadonlyArray<string>
     readonly id: number
+    readonly gain: number
   }
 }
 
@@ -108,7 +109,7 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 14
+export const stateVersion = 15
 
 export type State = {
   firstRun: boolean

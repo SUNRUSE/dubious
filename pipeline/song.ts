@@ -29,7 +29,8 @@ const exported: types.PurposeImplementation["song"] = {
       await audio.write(read.samples, paths.artifactsFile(`song-${id}`))
       return [{
         segments: utilities.preprocessSegments(content.segments, []),
-        id
+        id,
+        gain: read.gain
       }]
     } else {
       return []
