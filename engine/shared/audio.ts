@@ -143,7 +143,7 @@ class FileAudioBufferInstancePool {
       return
     }
 
-    const now = audioContext.currentTime + 0.01
+    const now = audioContext.currentTime
     startSeconds = now + startSeconds - elapsedSeconds
     for (const instance of this.instances) {
       if (Math.abs(instance.startSeconds - startSeconds) < 0.05) {
