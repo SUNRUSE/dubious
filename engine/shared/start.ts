@@ -13,13 +13,14 @@ onload = function () {
 checkEventLoop()
 
 let waitingForUserInteraction = true
-function onFirstUserInteraction() {
+function onFirstUserInteraction(): boolean {
   if (!waitingForUserInteraction) {
-    return
+    return false
   }
 
   waitingForUserInteraction = false
   initializeWebAudioApi()
+  return true
 }
 onmousedown = onFirstUserInteraction
 ontouchstart = onFirstUserInteraction
