@@ -322,7 +322,7 @@ class FileAudioBuffer {
       this.unload()
       this.audioContext = audioContext
     }
-    if (this.request === null && this.audioContext !== null && audioFormat !== null) {
+    if (this.audioBuffer === null && this.request === null && this.audioContext !== null && audioFormat !== null) {
       const request = this.request = new XMLHttpRequest()
       request.open(`GET`, `${this.path}.${audioFormat}`)
       request.responseType = `arraybuffer`
