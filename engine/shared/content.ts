@@ -173,6 +173,7 @@ class Sound {
 }
 
 class Song {
+  private readonly fileAudioBuffer: FileAudioBuffer
   private readonly fileAudioBufferLoopInstancePool: FileAudioBufferLoopInstancePool
 
   constructor(
@@ -180,8 +181,9 @@ class Song {
     leftGain: number,
     rightGain: number
   ) {
+    this.fileAudioBuffer = new FileAudioBuffer(`song-${id}`)
     this.fileAudioBufferLoopInstancePool = new FileAudioBufferLoopInstancePool(
-      new FileAudioBuffer(`song-${id}`),
+      this.fileAudioBuffer,
       leftGain,
       rightGain
     )
@@ -192,6 +194,7 @@ class Song {
     elapsedSeconds: number,
     gain: number
   ): void {
+    this.fileAudioBuffer.get()
     this.fileAudioBufferLoopInstancePool.play(startSeconds, elapsedSeconds, gain, gain)
   }
 }

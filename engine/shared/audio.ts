@@ -180,7 +180,7 @@ class FileAudioBufferPlayInstancePool {
       return
     }
 
-    const audioBuffer = this.fileAudioBuffer.get()
+    const audioBuffer = this.fileAudioBuffer.get().audioBuffer
     if (audioBuffer === null) {
       return
     }
@@ -259,7 +259,7 @@ class FileAudioBufferLoopInstancePool {
       return
     }
 
-    const audioBuffer = this.fileAudioBuffer.get()
+    const audioBuffer = this.fileAudioBuffer.get().audioBuffer
     if (audioBuffer === null) {
       return
     }
@@ -300,48 +300,75 @@ class FileAudioBufferLoopInstancePool {
   }
 }
 
-class FileAudioBuffer {
-  private audioContext: null | AudioContext = null
-  private request: null | XMLHttpRequest = null
-  private audioBuffer: null | AudioBuffer = null
+type CachedFileAudioBuffer = {
+  request: null | XMLHttpRequest
+  response: null | ArrayBuffer
+  decoding: boolean
+  audioBuffer: null | AudioBuffer
+}
 
+class FileAudioBuffer extends FrameCache<CachedFileAudioBuffer> {
   constructor(
     private readonly path: string
-  ) { }
-
-  unload(): void {
-    if (this.request !== null) {
-      this.request.abort()
-      this.request = null
-    }
-    this.audioBuffer = null
+  ) {
+    super()
   }
 
-  get(): null | AudioBuffer {
-    if (this.audioContext !== audioContext) {
-      this.unload()
-      this.audioContext = audioContext
+  private createRequest(cached: CachedFileAudioBuffer): void {
+    if (audioFormat === null) {
+      return
     }
-    if (this.audioBuffer === null && this.request === null && this.audioContext !== null && audioFormat !== null) {
-      const request = this.request = new XMLHttpRequest()
-      request.open(`GET`, `${this.path}.${audioFormat}`)
-      request.responseType = `arraybuffer`
-      request.onreadystatechange = () => {
-        if (request.readyState === 4 && request.status >= 200 && request.status <= 299) {
-          if (audioContext === null) {
-            throw new Error(`The Web Audio API context was expected to be available, but was not.`)
-          }
 
+    const request = cached.request = new XMLHttpRequest()
+    request.open(`GET`, `${this.path}.${audioFormat}`)
+    request.responseType = `arraybuffer`
+    request.onreadystatechange = () => {
+      if (request.readyState === 4 && request.status >= 200 && request.status <= 299) {
+        cached.request = null
+
+        if (audioContext === null) {
+          cached.response = request.response
+        } else {
+          cached.decoding = true
           audioContext.decodeAudioData(request.response, audioBuffer => {
-            if (this.request === request) {
-              this.audioBuffer = audioBuffer
-              this.request = null
-            }
+            cached.decoding = false
+            cached.audioBuffer = audioBuffer
           })
         }
       }
-      request.send()
     }
-    return this.audioBuffer
+    request.send()
+  }
+
+  create(): CachedFileAudioBuffer {
+    const output: CachedFileAudioBuffer = {
+      request: null,
+      response: null,
+      decoding: false,
+      audioBuffer: null
+    }
+    this.createRequest(output)
+    return output
+  }
+
+  update(cached: CachedFileAudioBuffer): void {
+    if (cached.audioBuffer === null && !cached.decoding) {
+      if (cached.response === null && cached.request === null) {
+        this.createRequest(cached)
+      } else if (cached.response !== null && audioContext !== null) {
+        cached.decoding = true
+        audioContext.decodeAudioData(cached.response, audioBuffer => {
+          cached.decoding = false
+          cached.audioBuffer = audioBuffer
+        })
+        cached.response = null
+      }
+    }
+  }
+
+  dispose(cached: CachedFileAudioBuffer): void {
+    if (cached.request !== null) {
+      cached.request.abort()
+    }
   }
 }
