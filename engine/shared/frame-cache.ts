@@ -8,6 +8,12 @@ function purgeFrameCaches(): void {
   }
 }
 
+function forcePurgeFrameCaches(): void {
+  while (activeFrameCaches.length !== 0) {
+    activeFrameCaches[0].forcePurge()
+  }
+}
+
 class FrameCache<T> {
   private active = false
   private usagesThisFrame = 0
@@ -31,13 +37,7 @@ class FrameCache<T> {
 
   purgeIfInactive(): boolean {
     if (this.usagesThisFrame === 0) {
-      activeFrameCaches.splice(activeFrameCaches.indexOf(this), 1)
-      this.active = false
-      const cached = this.cached
-      if (cached !== null) {
-        this.cached = null
-        this.dispose(cached)
-      }
+      this.purge()
     } else {
       const cached = this.cached
       if (cached !== null) {
@@ -46,6 +46,23 @@ class FrameCache<T> {
     }
     this.usagesThisFrame = 0
     return this.active
+  }
+
+  forcePurge(): void {
+    if (this.active) {
+      this.purge()
+      this.usagesThisFrame = 0
+    }
+  }
+
+  private purge(): void {
+    activeFrameCaches.splice(activeFrameCaches.indexOf(this), 1)
+    this.active = false
+    const cached = this.cached
+    if (cached !== null) {
+      this.cached = null
+      this.dispose(cached)
+    }
   }
 
   get(): T {

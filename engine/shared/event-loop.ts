@@ -37,7 +37,7 @@ function checkEventLoop(): void {
   function pause(): void {
     previousTime = null
     waitingForUserInteraction = true
-    purgeFrameCaches()
+    forcePurgeFrameCaches()
     if (audioContext !== null) {
       audioContext.close()
       audioContext = null
@@ -78,9 +78,7 @@ function onFrame(time: number): void {
   resetTransformStack()
   purgeFrameCaches()
 
-  if (audioFormat !== null && audioContext !== null) {
-    atlasSound.get()
-  }
+  atlasSound.get()
 
   const targetAspectRatio = targetWidth / targetHeight
   const actualAspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight
