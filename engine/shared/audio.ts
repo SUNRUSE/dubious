@@ -164,6 +164,10 @@ class FileAudioBufferPlayInstancePool {
       return
     }
 
+    if (leftGain === 0 && rightGain === 0) {
+      return
+    }
+
     const now = audioContext.currentTime
     startSeconds = now + startSeconds - elapsedSeconds
     for (const instance of this.instances) {
@@ -260,6 +264,10 @@ class FileAudioBufferLoopInstancePool {
 
     const audioBuffer = this.fileAudioBuffer.get().audioBuffer
     if (audioBuffer === null) {
+      return
+    }
+
+    if (leftGain === 0 && rightGain === 0) {
       return
     }
 
