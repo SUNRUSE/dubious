@@ -168,6 +168,14 @@ class FileAudioBufferPlayInstancePool {
       return
     }
 
+    if (startSeconds > elapsedSeconds) {
+      return
+    }
+
+    if (elapsedSeconds > startSeconds + this.durationSeconds) {
+      return
+    }
+
     const now = audioContext.currentTime
     startSeconds = now + startSeconds - elapsedSeconds
     for (const instance of this.instances) {
@@ -180,9 +188,6 @@ class FileAudioBufferPlayInstancePool {
     }
 
     const skipSeconds = Math.max(0, now - startSeconds)
-    if (skipSeconds >= this.durationSeconds) {
-      return
-    }
 
     const audioBuffer = this.fileAudioBuffer.get().audioBuffer
     if (audioBuffer === null) {
