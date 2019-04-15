@@ -202,9 +202,8 @@ class FileAudioBufferLoopInstance extends FrameCache<FileAudioBufferInstanceCont
   constructor(
     private readonly fileAudioBufferLoopInstancePool: FileAudioBufferLoopInstancePool,
     private readonly audioBuffer: AudioBuffer,
-    private readonly startSeconds: number,
-    readonly loopProgressSeconds: number,
-    readonly now: number
+    readonly startSeconds: number,
+    readonly loopProgressSeconds: number
   ) {
     super()
   }
@@ -274,7 +273,7 @@ class FileAudioBufferLoopInstancePool {
     const ourLoopProgressSeconds = ourPlayingForSeconds - Math.floor(ourPlayingForSeconds / audioBuffer.duration) * audioBuffer.duration
 
     for (const instance of this.instances) {
-      const theirPlayingForSeconds = instance.loopProgressSeconds + now - instance.now
+      const theirPlayingForSeconds = instance.loopProgressSeconds + now - instance.startSeconds
       const theirLoopProgressSeconds = theirPlayingForSeconds - Math.floor(theirPlayingForSeconds / audioBuffer.duration) * audioBuffer.duration
       const loopProgressSecondsDifference = Math.abs(theirLoopProgressSeconds - ourLoopProgressSeconds)
       const inverseLoopProgressSecondsDifference = Math.abs(loopProgressSecondsDifference - audioBuffer.duration)
@@ -290,8 +289,7 @@ class FileAudioBufferLoopInstancePool {
       this,
       audioBuffer,
       now,
-      ourLoopProgressSeconds,
-      now
+      ourLoopProgressSeconds
     )
     this.instances.push(instance)
     const instanceContent = instance.get()
