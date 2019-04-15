@@ -160,8 +160,13 @@ class FileAudioBufferPlayInstancePool {
     leftGain: number,
     rightGain: number
   ): void {
-    if (audioContext === null) {
+    const audioBuffer = this.fileAudioBuffer.get().audioBuffer
+    if (audioBuffer === null) {
       return
+    }
+
+    if (audioContext === null) {
+      throw new Error(`The Web Audio API context was expected to be available, but was not.`)
     }
 
     if (leftGain === 0 && rightGain === 0) {
@@ -188,11 +193,6 @@ class FileAudioBufferPlayInstancePool {
     }
 
     const skipSeconds = Math.max(0, now - startSeconds)
-
-    const audioBuffer = this.fileAudioBuffer.get().audioBuffer
-    if (audioBuffer === null) {
-      return
-    }
 
     const instance = new FileAudioBufferPlayInstance(
       this,
@@ -263,13 +263,13 @@ class FileAudioBufferLoopInstancePool {
     leftGain: number,
     rightGain: number
   ): void {
-    if (audioContext === null) {
-      return
-    }
-
     const audioBuffer = this.fileAudioBuffer.get().audioBuffer
     if (audioBuffer === null) {
       return
+    }
+
+    if (audioContext === null) {
+      throw new Error(`The Web Audio API context was expected to be available, but was not.`)
     }
 
     if (leftGain === 0 && rightGain === 0) {
