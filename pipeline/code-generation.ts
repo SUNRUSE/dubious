@@ -105,7 +105,7 @@ export default async function codeGeneration(
             output += `,`
           }
           output += `\n${indentation}  readonly `
-          if (JSON.stringify(key) === `  "${key}"`) {
+          if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
             output += key
           } else {
             output += JSON.stringify(key)
@@ -150,7 +150,7 @@ export default async function codeGeneration(
             output += `,`
           }
           output += `\n${indentation}  `
-          if (JSON.stringify(key) === `  "${key}"`) {
+          if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)) {
             output += key
           } else {
             output += JSON.stringify(key)
