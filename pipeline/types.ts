@@ -101,7 +101,10 @@ export type PurposeImplementation = {
 
 export type PackedItem = {
   readonly segments: ReadonlyArray<string>
-  readonly code: string
+  readonly code: {
+    readonly type: string
+    readonly value: string
+  }
 }
 
 export type Packed = {
@@ -109,7 +112,7 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 17
+export const stateVersion = 18
 
 export type State = {
   firstRun: boolean

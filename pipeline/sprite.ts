@@ -521,7 +521,10 @@ const atlasHeight = 1
       const output: types.PackedItem[] = []
       packedFrames.forEach(packedFrame => packedFrame.unpacked.users.forEach(user => output.push({
         segments: user,
-        code: `new Sprite(${packedFrame.x}, ${packedFrame.y}, ${packedFrame.unpacked.spriteFrame.width}, ${packedFrame.unpacked.spriteFrame.height}, ${packedFrame.unpacked.spriteFrame.offsetX}, ${packedFrame.unpacked.spriteFrame.offsetY})`
+        code: {
+          type: `Sprite`,
+          value: `new Sprite(${packedFrame.x}, ${packedFrame.y}, ${packedFrame.unpacked.spriteFrame.width}, ${packedFrame.unpacked.spriteFrame.height}, ${packedFrame.unpacked.spriteFrame.offsetX}, ${packedFrame.unpacked.spriteFrame.offsetY})`
+        }
       })))
       return {
         code: `

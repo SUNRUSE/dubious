@@ -44,7 +44,10 @@ const exported: types.PurposeImplementation["song"] = {
       code: ``,
       items: imported.map(song => ({
         segments: song.segments,
-        code: `new Song(${song.id}, ${song.gain}, ${song.gain})`
+        code: {
+          type: `Song`,
+          value: `new Song(${song.id}, ${song.gain}, ${song.gain})`
+        }
       }))
     }
   }

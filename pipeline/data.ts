@@ -31,7 +31,10 @@ const exported: types.PurposeImplementation["data"] = {
             case `string`:
               output.push({
                 segments: utilities.preprocessSegments(content.segments, subPaths),
-                code: JSON.stringify(element)
+                code: {
+                  type: JSON.stringify(element),
+                  value: JSON.stringify(element)
+                }
               })
               break
 
@@ -41,7 +44,10 @@ const exported: types.PurposeImplementation["data"] = {
               } else if (element === null) {
                 output.push({
                   segments: utilities.preprocessSegments(content.segments, subPaths),
-                  code: `null`
+                  code: {
+                    type: `null`,
+                    value: `null`
+                  }
                 })
               } else {
                 // TODO: Is there a way for TypeScript to be aware of this?
@@ -91,7 +97,10 @@ const exported: types.PurposeImplementation["data"] = {
                 }
                 output.push({
                   segments: utilities.preprocessSegments(content.segments, [rowKey, columnKey]),
-                  code
+                  code: {
+                    type: code,
+                    value: code
+                  }
                 })
               }
             })

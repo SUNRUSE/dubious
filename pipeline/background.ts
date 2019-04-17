@@ -209,7 +209,10 @@ const exported: types.PurposeImplementation["background"] = {
       code: ``,
       items: imported.map(background => ({
         segments: background.segments,
-        code: `new Background(${background.id}, ${background.width}, ${background.height}, ${background.offsetX}, ${background.offsetY})`
+        code: {
+          type: `Background`,
+          value: `new Background(${background.id}, ${background.width}, ${background.height}, ${background.offsetX}, ${background.offsetY})`
+        }
       }))
     }
   }
