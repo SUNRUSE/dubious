@@ -73,21 +73,29 @@ const exported: types.PurposeImplementation["sprite"] = {
           process.stdout.on(`data`, data => output += data)
           process.stdout.on(`close`, () => {
             stdOutClosed = true
-            if (succeeded) {
-              resolve(output)
-            }
+            checkSuccess()
           })
 
           process.on(`exit`, status => {
             succeeded = status === 0
-            if (succeeded) {
-              if (stdOutClosed) {
-                resolve(output)
-              }
-            } else {
-              reject(new Error(`Failed to invoke Aseprite to convert "${content.source}".`))
-            }
+            checkSuccess()
           })
+
+          function checkSuccess(): void {
+            if (!stdOutClosed) {
+              return
+            }
+            switch (succeeded) {
+              case null:
+                break
+              case false:
+                reject(new Error(`Failed to invoke Aseprite to convert "${content.source}"; "${output}".`))
+                break
+              case true:
+                resolve(output)
+                break
+            }
+          }
         })
         const data: {
           readonly frames: ReadonlyArray<{
