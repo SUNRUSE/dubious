@@ -19,6 +19,7 @@
 /// <reference path="content.ts" />
 /// <reference path="content/sprite.ts" />
 /// <reference path="content/background.ts" />
+/// <reference path="content/sound.ts" />
 /// <reference path="font.ts" />
 /// <reference path="border.ts" />
 /// <reference path="miscellaneous.ts" />
