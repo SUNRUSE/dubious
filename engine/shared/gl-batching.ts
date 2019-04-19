@@ -35,7 +35,7 @@ class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
 
   create(): ReadonlyArray<CachedBatchSprite> {
     if (writingBatchCache !== null) {
-      throw new Error(`Cannot nest BatchCache draw calls`)
+      throw new Error(`Cannot nest BatchCache/SpriteBatch draw calls`)
     }
 
     const output = writingBatchCache = []
@@ -59,6 +59,92 @@ class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
         currentTransform.applyX(sprite.x3, sprite.y3), currentTransform.applyY(sprite.x3, sprite.y3), sprite.u3, sprite.v3,
         currentTransform.applyX(sprite.x4, sprite.y4), currentTransform.applyY(sprite.x4, sprite.y4), sprite.u4, sprite.v4
       )
+    }
+  }
+}
+
+const spriteBatchTransform: GlMat4 = [
+  1, 0, 0, 0,
+  0, 1, 0, 0,
+  0, 0, 1, 0,
+  0, 0, 0, 1
+]
+
+class SpriteBatch extends FrameCache<null> {
+  private numberOfElements: number
+  private readonly buffer = new GlBuffer(
+    GlConstants.ARRAY_BUFFER,
+    GlConstants.STATIC_DRAW,
+    () => {
+      if (writingBatchCache !== null) {
+        throw new Error(`Cannot nest BatchCache/SpriteBatch draw calls`)
+      }
+
+      writingBatchCache = []
+      const sprites = writingBatchCache
+      pushTransformStack(true)
+      this.content()
+      popTransformStack()
+      writingBatchCache = null
+
+      this.numberOfElements = sprites.length
+      const output = new Float32Array(sprites.length * 16)
+      let offset = 0
+      for (const sprite of sprites) {
+        output[offset++] = sprite.x1
+        output[offset++] = sprite.y1
+        output[offset++] = sprite.u1
+        output[offset++] = sprite.v1
+        output[offset++] = sprite.x2
+        output[offset++] = sprite.y2
+        output[offset++] = sprite.u2
+        output[offset++] = sprite.v2
+        output[offset++] = sprite.x3
+        output[offset++] = sprite.y3
+        output[offset++] = sprite.u3
+        output[offset++] = sprite.v3
+        output[offset++] = sprite.x4
+        output[offset++] = sprite.y4
+        output[offset++] = sprite.u4
+        output[offset++] = sprite.v4
+      }
+
+      return output
+    }
+  )
+
+  constructor(
+    private readonly content: () => void
+  ) {
+    super()
+  }
+
+  create(): null {
+    return null
+  }
+
+  update(cached: null): void { }
+
+  dispose(cached: null): void {
+    this.buffer.dispose()
+  }
+
+  draw() {
+    this.get()
+    basicProgramWithTransform.bind()
+    this.buffer.bind()
+    basicProgramWithTransform.attributes.aLocation(16, 0)
+    basicProgramWithTransform.attributes.aTextureCoordinate(16, 8)
+    spriteBatchTransform[0] = currentTransform.xx
+    spriteBatchTransform[1] = currentTransform.yx
+    spriteBatchTransform[3] = currentTransform.x
+    spriteBatchTransform[4] = currentTransform.xy
+    spriteBatchTransform[5] = currentTransform.yy
+    spriteBatchTransform[7] = currentTransform.y
+    basicProgramWithTransform.uniforms.uTransform(spriteBatchTransform)
+    quadrilateralIndices.bind()
+    if (basicProgramWithTransform.uniforms.uTexture(atlasTexture)) {
+      gl.drawElements(GlConstants.TRIANGLES, this.numberOfElements * 6, GlConstants.UNSIGNED_SHORT, 0)
     }
   }
 }
