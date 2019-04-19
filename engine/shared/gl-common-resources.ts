@@ -38,3 +38,28 @@ const basicProgram = new GlProgram(
     `gl_FragColor = texture2D(uTexture, vTextureCoordinate);`
   ]
 )
+
+const basicProgramWithTransform = new GlProgram(
+  {
+    uTexture: `sampler2D`,
+    uTransform: `mat4`
+  }, {
+    aLocation: {
+      size: 2,
+      type: GlConstants.FLOAT,
+      normalized: false
+    },
+    aTextureCoordinate: {
+      size: 2,
+      type: GlConstants.FLOAT,
+      normalized: true
+    }
+  }, [
+    `vTextureCoordinate = aTextureCoordinate;`,
+    `gl_Position = vec4(aLocation, 0.0, 1.0) * uTransform;`
+  ], {
+    vTextureCoordinate: 2
+  }, [
+    `gl_FragColor = texture2D(uTexture, vTextureCoordinate);`
+  ]
+)
