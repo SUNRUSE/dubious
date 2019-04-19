@@ -48,7 +48,6 @@ class Sprite {
     const transformedYMaxX = this.yMax * currentTransform.yx
     const transformedYMaxY = this.yMax * currentTransform.yy
     drawBatch(
-      atlasTexture,
       transformedXMinX + transformedYMinX + currentTransform.x,
       transformedXMinY + transformedYMinY + currentTransform.y,
       this.uMin, this.vMin,

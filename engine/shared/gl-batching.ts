@@ -6,7 +6,6 @@ const batchVertices = new GlBuffer(
 )
 
 type CachedBatchSprite = {
-  readonly texture: GlTexture
   readonly x1: number
   readonly y1: number
   readonly u1: number
@@ -55,7 +54,6 @@ class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
   draw() {
     for (const sprite of this.get()) {
       drawBatch(
-        sprite.texture,
         currentTransform.applyX(sprite.x1, sprite.y1), currentTransform.applyY(sprite.x1, sprite.y1), sprite.u1, sprite.v1,
         currentTransform.applyX(sprite.x2, sprite.y2), currentTransform.applyY(sprite.x2, sprite.y2), sprite.u2, sprite.v2,
         currentTransform.applyX(sprite.x3, sprite.y3), currentTransform.applyY(sprite.x3, sprite.y3), sprite.u3, sprite.v3,
@@ -65,21 +63,16 @@ class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
   }
 }
 
-let batchTexture: null | GlTexture = null
 let batchProgress = 0
 
 function drawBatch(
-  texture: GlTexture,
   x1: number, y1: number, u1: number, v1: number,
   x2: number, y2: number, u2: number, v2: number,
   x3: number, y3: number, u3: number, v3: number,
   x4: number, y4: number, u4: number, v4: number
 ): void {
   if (writingBatchCache === null) {
-    if (texture !== batchTexture) {
-      flushBatch()
-      batchTexture = texture
-    } else if (batchProgress === 16384) {
+    if (batchProgress === 16384) {
       flushBatch()
     }
 
@@ -103,7 +96,6 @@ function drawBatch(
     batchProgress++
   } else {
     writingBatchCache.push({
-      texture,
       x1, y1, u1, v1,
       x2, y2, u2, v2,
       x3, y3, u3, v3,
@@ -113,7 +105,7 @@ function drawBatch(
 }
 
 function flushBatch(): void {
-  if (batchTexture === null || batchProgress === 0) {
+  if (batchProgress === 0) {
     return
   }
   basicProgram.bind()
@@ -122,7 +114,7 @@ function flushBatch(): void {
   basicProgram.attributes.aLocation(16, 0)
   basicProgram.attributes.aTextureCoordinate(16, 8)
   quadrilateralIndices.bind()
-  if (basicProgram.uniforms.uTexture(batchTexture)) {
+  if (basicProgram.uniforms.uTexture(atlasTexture)) {
     gl.drawElements(GlConstants.TRIANGLES, batchProgress * 6, GlConstants.UNSIGNED_SHORT, 0)
   }
   batchProgress = 0
