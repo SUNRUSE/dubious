@@ -23,4 +23,12 @@ class GlBuffer {
       gl.bindBuffer(this.target, this.buffer)
     }
   }
+
+  dispose(): void {
+    if (this.contextId === contextId) {
+      gl.deleteBuffer(this.buffer)
+      this.buffer = null
+      this.contextId = null
+    }
+  }
 }
