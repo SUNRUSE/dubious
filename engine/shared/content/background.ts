@@ -1,3 +1,4 @@
+const backgroundVertexData = new Float32Array(16)
 const backgroundTextures: GlFrameCachedOptionalImageTexture[] = []
 
 class Background {
@@ -52,20 +53,32 @@ class Background {
     const transformedYMinY = this.yMin * currentTransform.yy
     const transformedYMaxX = this.yMax * currentTransform.yx
     const transformedYMaxY = this.yMax * currentTransform.yy
-    drawBatch(
-      this.texture,
-      transformedXMinX + transformedYMinX + currentTransform.x,
-      transformedXMinY + transformedYMinY + currentTransform.y,
-      this.uMin, this.vMin,
-      transformedXMinX + transformedYMaxX + currentTransform.x,
-      transformedXMinY + transformedYMaxY + currentTransform.y,
-      this.uMin, this.vMax,
-      transformedXMaxX + transformedYMaxX + currentTransform.x,
-      transformedXMaxY + transformedYMaxY + currentTransform.y,
-      this.uMax, this.vMax,
-      transformedXMaxX + transformedYMinX + currentTransform.x,
-      transformedXMaxY + transformedYMinY + currentTransform.y,
-      this.uMax, this.vMin
-    )
+
+    backgroundVertexData[0] = transformedXMinX + transformedYMinX + currentTransform.x
+    backgroundVertexData[1] = transformedXMinY + transformedYMinY + currentTransform.y
+    backgroundVertexData[2] = this.uMin
+    backgroundVertexData[3] = this.vMin
+    backgroundVertexData[4] = transformedXMinX + transformedYMaxX + currentTransform.x
+    backgroundVertexData[5] = transformedXMinY + transformedYMaxY + currentTransform.y
+    backgroundVertexData[6] = this.uMin
+    backgroundVertexData[7] = this.vMax
+    backgroundVertexData[8] = transformedXMaxX + transformedYMaxX + currentTransform.x
+    backgroundVertexData[9] = transformedXMaxY + transformedYMaxY + currentTransform.y
+    backgroundVertexData[10] = this.uMax
+    backgroundVertexData[11] = this.vMax
+    backgroundVertexData[12] = transformedXMaxX + transformedYMinX + currentTransform.x
+    backgroundVertexData[13] = transformedXMaxY + transformedYMinY + currentTransform.y
+    backgroundVertexData[14] = this.uMax
+    backgroundVertexData[15] = this.vMin
+
+    basicProgram.bind()
+    batchVertices.bind()
+    gl.bufferSubData(GlConstants.ARRAY_BUFFER, 0, backgroundVertexData)
+    basicProgram.attributes.aLocation(16, 0)
+    basicProgram.attributes.aTextureCoordinate(16, 8)
+    quadrilateralIndices.bind()
+    if (basicProgram.uniforms.uTexture(this.texture)) {
+      gl.drawElements(GlConstants.TRIANGLES, 6, GlConstants.UNSIGNED_SHORT, 0)
+    }
   }
 }
