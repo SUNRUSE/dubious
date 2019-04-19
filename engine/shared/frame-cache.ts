@@ -17,7 +17,7 @@ function forcePurgeFrameCaches(): void {
 class FrameCache<T> {
   private active = false
   private usagesThisFrame = 0
-  private cached: null | T = null
+  private cached: undefined | T = undefined
 
   create(): T {
     throw new Error(`FrameCache<T>.create is not implemented`)
@@ -40,7 +40,7 @@ class FrameCache<T> {
       this.purge()
     } else {
       const cached = this.cached
-      if (cached !== null) {
+      if (cached !== undefined) {
         this.update(cached)
       }
     }
@@ -59,14 +59,14 @@ class FrameCache<T> {
     activeFrameCaches.splice(activeFrameCaches.indexOf(this), 1)
     this.active = false
     const cached = this.cached
-    if (cached !== null) {
-      this.cached = null
+    if (cached !== undefined) {
+      this.cached = undefined
       this.dispose(cached)
     }
   }
 
   get(): T {
-    if (this.cached === null) {
+    if (this.cached === undefined) {
       this.cached = this.create()
       if (!this.active) {
         activeFrameCaches.push(this)
