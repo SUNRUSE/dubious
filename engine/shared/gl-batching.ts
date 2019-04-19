@@ -4,45 +4,6 @@ const batchVertices = new GlBuffer(
   GlConstants.DYNAMIC_DRAW,
   () => batchVertexData
 )
-const batchIndices = new GlBuffer(
-  GlConstants.ELEMENT_ARRAY_BUFFER,
-  GlConstants.STATIC_DRAW,
-  () => {
-    const output = new Uint16Array(98304)
-    for (let quad = 0; quad < 16384; quad++) {
-      output[quad * 6] = quad * 4
-      output[quad * 6 + 1] = quad * 4 + 1
-      output[quad * 6 + 2] = quad * 4 + 2
-      output[quad * 6 + 3] = quad * 4 + 2
-      output[quad * 6 + 4] = quad * 4 + 3
-      output[quad * 6 + 5] = quad * 4
-    }
-    return output
-  }
-)
-const batchProgram = new GlProgram(
-  {
-    uTexture: `sampler2D`
-  }, {
-    aLocation: {
-      size: 2,
-      type: GlConstants.FLOAT,
-      normalized: false
-    },
-    aTextureCoordinate: {
-      size: 2,
-      type: GlConstants.FLOAT,
-      normalized: true
-    }
-  }, [
-    `vTextureCoordinate = aTextureCoordinate;`,
-    `gl_Position = vec4(aLocation, 0.0, 1.0);`
-  ], {
-    vTextureCoordinate: 2
-  }, [
-    `gl_FragColor = texture2D(uTexture, vTextureCoordinate);`
-  ]
-)
 
 type CachedBatchSprite = {
   readonly texture: GlTexture
@@ -155,13 +116,13 @@ function flushBatch(): void {
   if (batchTexture === null || batchProgress === 0) {
     return
   }
-  batchProgram.bind()
+  basicProgram.bind()
   batchVertices.bind()
   gl.bufferSubData(GlConstants.ARRAY_BUFFER, 0, batchVertexData.subarray(0, batchProgress * 16))
-  batchProgram.attributes.aLocation(16, 0)
-  batchProgram.attributes.aTextureCoordinate(16, 8)
-  batchIndices.bind()
-  if (batchProgram.uniforms.uTexture(batchTexture)) {
+  basicProgram.attributes.aLocation(16, 0)
+  basicProgram.attributes.aTextureCoordinate(16, 8)
+  quadrilateralIndices.bind()
+  if (basicProgram.uniforms.uTexture(batchTexture)) {
     gl.drawElements(GlConstants.TRIANGLES, batchProgress * 6, GlConstants.UNSIGNED_SHORT, 0)
   }
   batchProgress = 0

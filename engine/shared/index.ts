@@ -14,6 +14,7 @@
 /// <reference path="gl-optional-image-texture.ts" />
 /// <reference path="gl-buffer.ts" />
 /// <reference path="gl-program.ts" />
+/// <reference path="gl-common-resources.ts" />
 /// <reference path="gl-batching.ts" />
 /// <reference path="audio.ts" />
 /// <reference path="content/sprite.ts" />
