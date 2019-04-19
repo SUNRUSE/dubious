@@ -17,3 +17,7 @@ function distanceSquared(x1: number, y1: number, x2: number, y2: number): number
 function distance(x1: number, y1: number, x2: number, y2: number): number {
   return Math.sqrt(distanceSquared(x1, y1, x2, y2))
 }
+
+function dotProduct(x1: number, y1: number, x2: number, y2: number): number {
+  return x1 * x2 + y1 * y2
+}
