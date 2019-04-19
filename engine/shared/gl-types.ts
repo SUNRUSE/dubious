@@ -20,5 +20,6 @@ type GlMat3 = [
 type GlMat4 = [
   number, number, number, number,
   number, number, number, number,
+  number, number, number, number,
   number, number, number, number
 ]
