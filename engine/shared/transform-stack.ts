@@ -67,6 +67,19 @@ function scale(factor: number): void {
   scaleY(factor)
 }
 
+function flipX(): void {
+  currentTransform.flipX()
+}
+
+function flipY(): void {
+  currentTransform.flipY()
+}
+
+function flip(): void {
+  flipX()
+  flipY()
+}
+
 function rotate(radians: number): void {
   currentTransform.rotate(radians)
 }

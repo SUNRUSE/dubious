@@ -52,6 +52,16 @@ class Transform {
     this.yy *= factor
   }
 
+  flipX(): void {
+    this.xx = -this.xx
+    this.xy = -this.xy
+  }
+
+  flipY(): void {
+    this.yx = -this.yx
+    this.yy = -this.yy
+  }
+
   rotate(radians: number): void {
     const cos = Math.cos(radians)
     const sin = Math.sin(radians)
