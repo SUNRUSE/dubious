@@ -71,7 +71,6 @@ function onFrame(time: number): void {
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
   gl.clearColor(0, 0, 0, 1)
   gl.clear(GlConstants.COLOR_BUFFER_BIT)
-  gl.enable(GlConstants.CULL_FACE)
   gl.enable(GlConstants.BLEND)
   gl.blendFunc(GlConstants.SRC_ALPHA, GlConstants.ONE_MINUS_SRC_ALPHA)
 
