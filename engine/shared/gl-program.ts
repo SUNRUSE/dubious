@@ -78,7 +78,8 @@ class GlProgram<TUniform extends {
 
     const attributesSource = Object.keys(attributes).map(key => `attribute ${describeSize(attributes[key].size)} ${key};${lineSeparator}`).join(``)
     this.vertexSource = `precision mediump float;${lineSeparator}${attributesSource}${header}${vertexSource.join(lineSeparator)}${footer}`
-    this.fragmentSource = `precision mediump float;${lineSeparator}${header}${fragmentSource.join(lineSeparator)}${footer}`
+    this.fragmentSource = `#extension GL_OES_standard_derivatives : enable
+precision mediump float;${lineSeparator}${header}${fragmentSource.join(lineSeparator)}${footer}`
 
     const uniformFunctions: {
       [key: string]: GlUniform[keyof GlUniform]

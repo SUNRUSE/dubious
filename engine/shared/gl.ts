@@ -21,6 +21,9 @@ function getGl(): WebGLRenderingContext {
       throw new Error(`Failed to create a WebGL context.`)
     }
     gl = possibleGl
+    if (gl.getExtension(`OES_standard_derivatives`) === null) {
+      throw new Error(`This implementation of WebGL does not support the standard derivatives extension.`)
+    }
     canvas.addEventListener(`webglcontextlost`, event => {
       contextLost = true
       checkEventLoop()
