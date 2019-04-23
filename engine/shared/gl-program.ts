@@ -12,9 +12,9 @@ const textureConstants = [
 
 interface GlUniform {
   float(value: GlFloat): void
-  vec2(value: GlVec2): void
-  vec3(value: GlVec3): void
-  vec4(value: GlVec4): void
+  vec2(x: GlFloat, y: GlFloat): void
+  vec3(x: GlFloat, y: GlFloat, z: GlFloat): void
+  vec4(x: GlFloat, y: GlFloat, z: GlFloat, w: GlFloat): void
   mat2(value: GlMat2): void
   mat3(value: GlMat3): void
   mat4(value: GlMat4): void
@@ -97,23 +97,23 @@ precision mediump float;${lineSeparator}${header}${fragmentSource.join(lineSepar
           }
           break
         case `vec2`:
-          uniformFunctions[key] = (value: GlVec2): void => {
+          uniformFunctions[key] = (x: GlFloat, y: GlFloat): void => {
             if (this.contextId === contextId) {
-              gl.uniform2fv(this.uniformLocations[key], value)
+              gl.uniform2f(this.uniformLocations[key], x, y)
             }
           }
           break
         case `vec3`:
-          uniformFunctions[key] = (value: GlVec3): void => {
+          uniformFunctions[key] = (x: GlFloat, y: GlFloat, z: GlFloat): void => {
             if (this.contextId === contextId) {
-              gl.uniform3fv(this.uniformLocations[key], value)
+              gl.uniform3f(this.uniformLocations[key], x, y, z)
             }
           }
           break
         case `vec4`:
-          uniformFunctions[key] = (value: GlVec4): void => {
+          uniformFunctions[key] = (x: GlFloat, y: GlFloat, z: GlFloat, w: GlFloat): void => {
             if (this.contextId === contextId) {
-              gl.uniform4fv(this.uniformLocations[key], value)
+              gl.uniform4f(this.uniformLocations[key], x, y, z, w)
             }
           }
           break
