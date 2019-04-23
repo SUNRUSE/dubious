@@ -19,6 +19,12 @@ export async function read(pngPath: string): Promise<pngjs.PNG> {
       .on(`error`, reject)
       .on(`parsed`, resolve)
   })
+  for (let pixel = 0; pixel < png.data.length; pixel += 4) {
+    const alpha = png.data[pixel + 3] / 255
+    png.data[pixel] = Math.floor(png.data[pixel] * alpha)
+    png.data[pixel + 1] = Math.floor(png.data[pixel + 1] * alpha)
+    png.data[pixel + 2] = Math.floor(png.data[pixel + 2] * alpha)
+  }
   return png
 }
 
