@@ -14,8 +14,8 @@ class Background {
 
   constructor(
     id: number,
-    width: number,
-    height: number,
+    private readonly width: number,
+    private readonly height: number,
     offsetLeft: number,
     offsetTop: number
   ) {
@@ -77,6 +77,7 @@ class Background {
     basicProgram.attributes.aLocation(16, 0)
     basicProgram.attributes.aTextureCoordinate(16, 8)
     quadrilateralIndices.bind()
+    basicProgram.uniforms.uTextureResolution(this.width + 2, this.height + 2)
     if (basicProgram.uniforms.uTexture(this.texture)) {
       gl.drawElements(GlConstants.TRIANGLES, 6, GlConstants.UNSIGNED_SHORT, 0)
     }

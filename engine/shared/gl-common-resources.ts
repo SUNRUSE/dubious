@@ -15,9 +15,26 @@ const quadrilateralIndices = new GlBuffer(
   }
 )
 
+const basicFragmentSource = [
+  `vec2 nnTextureCoordinate = vTextureCoordinate;`,
+  `vec2 npTextureCoordinate = vTextureCoordinate + dFdy(vTextureCoordinate);`,
+  `vec2 pnTextureCoordinate = vTextureCoordinate + dFdx(vTextureCoordinate);`,
+  `vec2 ppTextureCoordinate = vTextureCoordinate + dFdx(vTextureCoordinate) + dFdy(vTextureCoordinate);`,
+  `vec2 lowerTextureCoordinate = min(nnTextureCoordinate, min(npTextureCoordinate, min(pnTextureCoordinate, ppTextureCoordinate)));`,
+  `vec2 upperTextureCoordinate = max(nnTextureCoordinate, max(npTextureCoordinate, max(pnTextureCoordinate, ppTextureCoordinate)));`,
+  `vec2 nearestPixelTextureCoordinate = ceil(lowerTextureCoordinate * uTextureResolution) / uTextureResolution;`,
+  `vec2 blendWeights = clamp((upperTextureCoordinate - nearestPixelTextureCoordinate) / (upperTextureCoordinate - lowerTextureCoordinate), 0.0, 1.0);`,
+  `vec4 nnSample = texture2D(uTexture, lowerTextureCoordinate);`,
+  `vec4 npSample = texture2D(uTexture, vec2(lowerTextureCoordinate.x, upperTextureCoordinate.y));`,
+  `vec4 pnSample = texture2D(uTexture, vec2(upperTextureCoordinate.x, lowerTextureCoordinate.y));`,
+  `vec4 ppSample = texture2D(uTexture, upperTextureCoordinate);`,
+  `gl_FragColor = mix(mix(nnSample, npSample, blendWeights.y), mix(pnSample, ppSample, blendWeights.y), blendWeights.x);`
+]
+
 const basicProgram = new GlProgram(
   {
-    uTexture: `sampler2D`
+    uTexture: `sampler2D`,
+    uTextureResolution: `vec2`
   }, {
     aLocation: {
       size: 2,
@@ -34,15 +51,14 @@ const basicProgram = new GlProgram(
     `gl_Position = vec4(aLocation, 0.0, 1.0);`
   ], {
     vTextureCoordinate: 2
-  }, [
-    `gl_FragColor = texture2D(uTexture, vTextureCoordinate);`
-  ]
+  }, basicFragmentSource
 )
 
 const basicProgramWithTransform = new GlProgram(
   {
     uTexture: `sampler2D`,
-    uTransform: `mat4`
+    uTransform: `mat4`,
+    uTextureResolution: `vec2`
   }, {
     aLocation: {
       size: 2,
@@ -59,7 +75,5 @@ const basicProgramWithTransform = new GlProgram(
     `gl_Position = vec4(aLocation, 0.0, 1.0) * uTransform;`
   ], {
     vTextureCoordinate: 2
-  }, [
-    `gl_FragColor = texture2D(uTexture, vTextureCoordinate);`
-  ]
+  }, basicFragmentSource
 )

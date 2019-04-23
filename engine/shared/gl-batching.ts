@@ -142,6 +142,7 @@ class SpriteBatch extends FrameCache<null> {
     spriteBatchTransform[5] = currentTransform.yy
     spriteBatchTransform[7] = currentTransform.y
     basicProgramWithTransform.uniforms.uTransform(spriteBatchTransform)
+    basicProgramWithTransform.uniforms.uTextureResolution(atlasWidth, atlasHeight)
     quadrilateralIndices.bind()
     if (basicProgramWithTransform.uniforms.uTexture(atlasTexture)) {
       gl.drawElements(GlConstants.TRIANGLES, this.numberOfElements * 6, GlConstants.UNSIGNED_SHORT, 0)
@@ -200,6 +201,7 @@ function flushBatch(): void {
   basicProgram.attributes.aLocation(16, 0)
   basicProgram.attributes.aTextureCoordinate(16, 8)
   quadrilateralIndices.bind()
+  basicProgram.uniforms.uTextureResolution(atlasWidth, atlasHeight)
   if (basicProgram.uniforms.uTexture(atlasTexture)) {
     gl.drawElements(GlConstants.TRIANGLES, batchProgress * 6, GlConstants.UNSIGNED_SHORT, 0)
   }
