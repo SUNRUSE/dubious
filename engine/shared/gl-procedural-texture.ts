@@ -21,10 +21,10 @@ class GlProceduralTexture implements GlTexture {
       this.texture = gl.createTexture()
       gl.bindTexture(this.target, this.texture)
       gl.texImage2D(this.target, 0, this.format, this.width, this.height, 0, this.format, this.type, this.pixelsFactory())
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.textureWrapS)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.textureWrapT)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.minFilter)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.magFilter)
+      gl.texParameteri(this.target, gl.TEXTURE_WRAP_S, this.textureWrapS)
+      gl.texParameteri(this.target, gl.TEXTURE_WRAP_T, this.textureWrapT)
+      gl.texParameteri(this.target, gl.TEXTURE_MIN_FILTER, this.minFilter)
+      gl.texParameteri(this.target, gl.TEXTURE_MAG_FILTER, this.magFilter)
       if (this.generateMipmap) {
         gl.generateMipmap(this.target)
       }
