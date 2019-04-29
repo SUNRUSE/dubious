@@ -50,6 +50,9 @@ function checkEventLoop(): void {
   }
 }
 
+let displayWidth: number
+let displayHeight: number
+
 function onFrame(time: number): void {
   animationFrame = null
 
@@ -68,7 +71,9 @@ function onFrame(time: number): void {
   const gl = getGl()
   gl.canvas.width = gl.canvas.clientWidth
   gl.canvas.height = gl.canvas.clientHeight
-  gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+  displayWidth = gl.drawingBufferWidth
+  displayHeight = gl.drawingBufferHeight
+  gl.viewport(0, 0, displayWidth, displayHeight)
   gl.clearColor(0, 0, 0, 1)
   gl.clear(GlConstants.COLOR_BUFFER_BIT)
   gl.enable(GlConstants.BLEND)
