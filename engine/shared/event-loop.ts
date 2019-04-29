@@ -82,7 +82,7 @@ function onFrame(time: number): void {
   resetTransformStack()
   purgeFrameCaches()
 
-  atlasSound.get()
+  atlasSound.getOrCreate()
 
   const targetAspectRatio = targetWidth / targetHeight
   const actualAspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight

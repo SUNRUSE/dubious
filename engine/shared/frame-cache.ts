@@ -65,7 +65,7 @@ class FrameCache<T> {
     }
   }
 
-  get(): T {
+  getOrCreate(): T {
     if (this.cached === undefined) {
       this.cached = this.create()
       if (!this.active) {
@@ -74,6 +74,10 @@ class FrameCache<T> {
       }
     }
     this.usagesThisFrame++
+    return this.cached
+  }
+
+  get(): undefined | T {
     return this.cached
   }
 }

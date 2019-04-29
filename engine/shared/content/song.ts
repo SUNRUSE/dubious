@@ -20,7 +20,7 @@ class Song {
     elapsedSeconds: number,
     gain: number
   ): void {
-    this.fileAudioBuffer.get()
+    this.fileAudioBuffer.getOrCreate()
     this.fileAudioBufferLoopInstancePool.play(startSeconds, elapsedSeconds, gain, gain)
   }
 }

@@ -160,7 +160,7 @@ class FileAudioBufferPlayInstancePool {
     leftGain: number,
     rightGain: number
   ): void {
-    const audioBuffer = this.fileAudioBuffer.get().audioBuffer
+    const audioBuffer = this.fileAudioBuffer.getOrCreate().audioBuffer
     if (audioBuffer === null) {
       return
     }
@@ -185,7 +185,7 @@ class FileAudioBufferPlayInstancePool {
     startSeconds = now + startSeconds - elapsedSeconds
     for (const instance of this.instances) {
       if (Math.abs(instance.startSeconds - startSeconds) < 0.05) {
-        const instanceContent = instance.get()
+        const instanceContent = instance.getOrCreate()
         instanceContent.leftGain += leftGain
         instanceContent.rightGain += rightGain
         return
@@ -201,7 +201,7 @@ class FileAudioBufferPlayInstancePool {
       skipSeconds
     )
     this.instances.push(instance)
-    const instanceContent = instance.get()
+    const instanceContent = instance.getOrCreate()
     instanceContent.leftGain += leftGain
     instanceContent.rightGain += rightGain
   }
@@ -263,7 +263,7 @@ class FileAudioBufferLoopInstancePool {
     leftGain: number,
     rightGain: number
   ): void {
-    const audioBuffer = this.fileAudioBuffer.get().audioBuffer
+    const audioBuffer = this.fileAudioBuffer.getOrCreate().audioBuffer
     if (audioBuffer === null) {
       return
     }
@@ -291,7 +291,7 @@ class FileAudioBufferLoopInstancePool {
       const loopProgressSecondsDifference = Math.abs(theirLoopProgressSeconds - ourLoopProgressSeconds)
       const inverseLoopProgressSecondsDifference = Math.abs(loopProgressSecondsDifference - audioBuffer.duration)
       if (loopProgressSecondsDifference < 0.05 || inverseLoopProgressSecondsDifference < 0.05) {
-        const instanceContent = instance.get()
+        const instanceContent = instance.getOrCreate()
         instanceContent.leftGain += leftGain
         instanceContent.rightGain += rightGain
         return
@@ -305,7 +305,7 @@ class FileAudioBufferLoopInstancePool {
       ourLoopProgressSeconds
     )
     this.instances.push(instance)
-    const instanceContent = instance.get()
+    const instanceContent = instance.getOrCreate()
     instanceContent.leftGain += leftGain
     instanceContent.rightGain += rightGain
   }

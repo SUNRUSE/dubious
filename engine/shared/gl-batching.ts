@@ -52,7 +52,7 @@ class BatchCache extends FrameCache<ReadonlyArray<CachedBatchSprite>> {
   dispose(cached: ReadonlyArray<CachedBatchSprite>): void { }
 
   draw() {
-    for (const sprite of this.get()) {
+    for (const sprite of this.getOrCreate()) {
       drawBatch(
         currentTransform.applyX(sprite.x1, sprite.y1), currentTransform.applyY(sprite.x1, sprite.y1), sprite.u1, sprite.v1,
         currentTransform.applyX(sprite.x2, sprite.y2), currentTransform.applyY(sprite.x2, sprite.y2), sprite.u2, sprite.v2,
@@ -130,7 +130,7 @@ class SpriteBatch extends FrameCache<null> {
   }
 
   draw() {
-    this.get()
+    this.getOrCreate()
     basicProgramWithTransform.bind()
     this.buffer.bind()
     basicProgramWithTransform.attributes.aLocation(16, 0)

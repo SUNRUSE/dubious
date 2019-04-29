@@ -96,6 +96,6 @@ class GlFrameCachedOptionalImageTexture extends FrameCache<GlOptionalImageTextur
   }
 
   bind(): boolean {
-    return this.get().bind()
+    return this.getOrCreate().bind()
   }
 }
