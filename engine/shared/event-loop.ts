@@ -79,6 +79,7 @@ function onFrame(time: number): void {
   gl.enable(GlConstants.BLEND)
   gl.blendFunc(GlConstants.ONE, GlConstants.ONE_MINUS_SRC_ALPHA)
 
+  populatingRenderTarget = null
   resetTransformStack()
   purgeFrameCaches()
 

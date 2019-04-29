@@ -9,6 +9,7 @@
 /// <reference path="gl-constants.ts" />
 /// <reference path="gl-types.ts" />
 /// <reference path="gl-texture.ts" />
+/// <reference path="gl-render-target.ts" />
 /// <reference path="gl-procedural-texture.ts" />
 /// <reference path="gl-gameplay-critical-image-texture.ts" />
 /// <reference path="gl-optional-image-texture.ts" />
