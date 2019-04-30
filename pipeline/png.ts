@@ -3,7 +3,7 @@ import * as fs from "fs"
 import * as util from "util"
 import * as pngjs from "pngjs"
 const pngcrushBin = require(`pngcrush-bin`)
-import * as tempfile from "tempfile"
+import tempfile = require("tempfile")
 import * as _rimraf from "rimraf"
 import * as utilities from "./utilities"
 import settings from "./settings"
