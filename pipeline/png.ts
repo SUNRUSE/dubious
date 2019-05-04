@@ -1,9 +1,17 @@
 import * as childProcess from "child_process"
 import * as fs from "fs"
+import * as util from "util"
 import * as pngjs from "pngjs"
+import * as _rimraf from "rimraf"
+import tempfile = require("tempfile")
 const pngcrushBin = require(`pngcrush-bin`)
+import * as types from "./types"
 import * as utilities from "./utilities"
 import settings from "./settings"
+import * as cacheBusting from "./cache-busting"
+
+const fsReadFile = util.promisify(fs.readFile)
+const rimraf = util.promisify(_rimraf)
 
 export async function read(pngPath: string): Promise<pngjs.PNG> {
   const png = new pngjs.PNG()
@@ -21,6 +29,22 @@ export async function read(pngPath: string): Promise<pngjs.PNG> {
     png.data[pixel + 2] = Math.floor(255 * Math.pow(png.data[pixel + 2] / 255, 1.0 / 2.2) * alpha)
   }
   return png
+}
+
+export async function writeWithCacheBusting(
+  state: types.State,
+  fromPng: pngjs.PNG
+): Promise<string> {
+  const temp = tempfile()
+  try {
+    await write(fromPng, temp)
+    const contents = await fsReadFile(temp)
+    const filename = cacheBusting.generateFilename(contents)
+    await cacheBusting.request(state, `${filename}.png`, contents)
+    return filename
+  } finally {
+    await rimraf(temp)
+  }
 }
 
 export async function write(

@@ -32,6 +32,7 @@
     "progress": "2.0.3",
     "recursive-readdir": "2.2.2",
     "rimraf": "2.6.3",
+    "tempfile": "^3.0.0",
     "ts-node": "8.1.0",
     "typescript": "3.4.5",
     "uglify-js": "3.5.10"
