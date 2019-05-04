@@ -185,7 +185,7 @@ const exported: types.PurposeImplementation["sprite"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["sprite"]>
-  ): Promise<types.Packed> {
+  ): Promise<types.Packed<"sprite">> {
     if (!imported.length) {
       await png.write(
         new pngjs.PNG({ width: 1, height: 1 }),
@@ -196,7 +196,8 @@ const exported: types.PurposeImplementation["sprite"] = {
 const atlasWidth = 1
 const atlasHeight = 1
 `,
-        items: []
+        items: [],
+        packed: {}
       }
     }
 
@@ -538,13 +539,14 @@ const atlasHeight = 1
 const atlasWidth = ${width}
 const atlasHeight = ${height}
 `,
-        items: output
+        items: output,
+        packed: {}
       }
     }
   },
 
   async deletePacked(
-    packed: types.Packed
+    packed: types.Packed<"sprite">
   ): Promise<void> {
 
   }

@@ -59,6 +59,14 @@ export type ImportedPurpose = {
   }
 }
 
+export type PackedPurpose = {
+  readonly data: {}
+  readonly sprite: {}
+  readonly background: {}
+  readonly sound: {}
+  readonly song: {}
+}
+
 export type ImportedPurposeFile<TPurpose extends Purpose> = {
   readonly common: ImportedCommonPurpose[TPurpose]
   readonly byFile: { [file: string]: ReadonlyArray<ImportedPurpose[TPurpose]> }
@@ -95,9 +103,9 @@ export type PurposeImplementation = {
     ): Promise<ReadonlyArray<ImportedPurpose[TPurpose]>>
     pack(
       imported: ReadonlyArray<ImportedPurpose[TPurpose]>
-    ): Promise<Packed>
+    ): Promise<Packed<TPurpose>>
     deletePacked(
-      packed: Packed
+      packed: Packed<TPurpose>
     ): Promise<void>
   }
 }
@@ -110,12 +118,13 @@ export type PackedItem = {
   }
 }
 
-export type Packed = {
+export type Packed<TPurpose extends Purpose> = {
   readonly items: ReadonlyArray<PackedItem>
   readonly code: string
+  readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 24
+export const stateVersion = 25
 
 export type State = {
   firstRun: boolean
@@ -125,7 +134,7 @@ export type State = {
     readonly [filename: string]: string
   }
   readonly packedContentMetadata: {
-    [TPurpose in Purpose]: Packed
+    [TPurpose in Purpose]: Packed<TPurpose>
   }
 }
 

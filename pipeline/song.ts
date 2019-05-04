@@ -39,7 +39,7 @@ const exported: types.PurposeImplementation["song"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["song"]>
-  ): Promise<types.Packed> {
+  ): Promise<types.Packed<"song">> {
     return {
       code: ``,
       items: imported.map(song => ({
@@ -48,12 +48,13 @@ const exported: types.PurposeImplementation["song"] = {
           type: `Song`,
           value: `new Song(${song.id}, ${song.gain}, ${song.gain})`
         }
-      }))
+      })),
+      packed: {}
     }
   },
 
   async deletePacked(
-    packed: types.Packed
+    packed: types.Packed<"song">
   ): Promise<void> {
 
   }

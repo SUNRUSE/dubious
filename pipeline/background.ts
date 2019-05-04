@@ -204,7 +204,7 @@ const exported: types.PurposeImplementation["background"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["background"]>
-  ): Promise<types.Packed> {
+  ): Promise<types.Packed<"background">> {
     return {
       code: ``,
       items: imported.map(background => ({
@@ -213,12 +213,13 @@ const exported: types.PurposeImplementation["background"] = {
           type: `Background`,
           value: `new Background(${background.id}, ${background.width}, ${background.height}, ${background.offsetX}, ${background.offsetY})`
         }
-      }))
+      })),
+      packed: {}
     }
   },
 
   async deletePacked(
-    packed: types.Packed
+    packed: types.Packed<"background">
   ): Promise<void> {
 
   }

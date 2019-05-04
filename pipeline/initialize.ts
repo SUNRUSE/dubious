@@ -85,23 +85,28 @@ export default async function () {
     packedContentMetadata: {
       data: {
         code: ``,
-        items: []
+        items: [],
+        packed: {}
       },
       sprite: {
         code: ``,
-        items: []
+        items: [],
+        packed: {}
       },
       background: {
         code: ``,
-        items: []
+        items: [],
+        packed: {}
       },
       sound: {
         code: ``,
-        items: []
+        items: [],
+        packed: {}
       },
       song: {
         code: ``,
-        items: []
+        items: [],
+        packed: {}
       }
     }
   }

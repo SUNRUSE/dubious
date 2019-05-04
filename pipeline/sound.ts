@@ -50,7 +50,7 @@ const exported: types.PurposeImplementation["sound"] = {
 
   async pack(
     imported: ReadonlyArray<types.ImportedPurpose["sound"]>
-  ): Promise<types.Packed> {
+  ): Promise<types.Packed<"sound">> {
     type UnpackedSound = {
       readonly sound: types.ImportedPurpose["sound"]
       readonly raw: Float32Array
@@ -93,12 +93,13 @@ const exported: types.PurposeImplementation["sound"] = {
 
     return {
       code: ``,
-      items: output
+      items: output,
+      packed: {}
     }
   },
 
   async deletePacked(
-    packed: types.Packed
+    packed: types.Packed<"sound">
   ): Promise<void> {
 
   }
