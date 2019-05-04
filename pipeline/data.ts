@@ -118,6 +118,12 @@ const exported: types.PurposeImplementation["data"] = {
       code: ``,
       items: imported
     }
+  },
+
+  async deletePacked(
+    packed: types.Packed
+  ): Promise<void> {
+
   }
 }
 

@@ -215,6 +215,12 @@ const exported: types.PurposeImplementation["background"] = {
         }
       }))
     }
+  },
+
+  async deletePacked(
+    packed: types.Packed
+  ): Promise<void> {
+
   }
 }
 

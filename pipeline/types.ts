@@ -96,6 +96,9 @@ export type PurposeImplementation = {
     pack(
       imported: ReadonlyArray<ImportedPurpose[TPurpose]>
     ): Promise<Packed>
+    deletePacked(
+      packed: Packed
+    ): Promise<void>
   }
 }
 

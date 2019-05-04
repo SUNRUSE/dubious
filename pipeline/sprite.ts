@@ -541,6 +541,12 @@ const atlasHeight = ${height}
         items: output
       }
     }
+  },
+
+  async deletePacked(
+    packed: types.Packed
+  ): Promise<void> {
+
   }
 }
 

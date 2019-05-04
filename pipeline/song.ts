@@ -50,6 +50,12 @@ const exported: types.PurposeImplementation["song"] = {
         }
       }))
     }
+  },
+
+  async deletePacked(
+    packed: types.Packed
+  ): Promise<void> {
+
   }
 }
 

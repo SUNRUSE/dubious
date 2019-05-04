@@ -110,6 +110,13 @@ export default async function (
 
   await utilities.asyncProgressBar(`Writing cached imported content...`, purposesToPack, true, async purpose => await fsWriteFile(paths.importedPurposeCache(purpose), JSON.stringify(await importedByPurpose.get(purpose))))
 
+  if (!state.firstRun) {
+    await utilities.asyncProgressBar(`Deleting previously packed content...`, purposesToPack, false, async purpose => {
+      const implementation = purposes[purpose].deletePacked as any
+      await implementation(state.packedContentMetadata[purpose])
+    })
+  }
+
   await utilities.asyncProgressBar(`Packing content...`, purposesToPack, false, async purpose => {
     const implementation = purposes[purpose].pack as any
     const metadata = await importedByPurpose.get(purpose)

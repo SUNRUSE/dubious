@@ -95,6 +95,12 @@ const exported: types.PurposeImplementation["sound"] = {
       code: ``,
       items: output
     }
+  },
+
+  async deletePacked(
+    packed: types.Packed
+  ): Promise<void> {
+
   }
 }
 
