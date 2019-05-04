@@ -120,15 +120,6 @@ export function revokeAllCaches(): void {
   allKeyedCaches.forEach(keyedCache => keyedCache.revokeAll())
 }
 
-export function findNextId(ids: number[]): number {
-  let id = 0
-  while (ids.includes(id)) {
-    id++
-  }
-  ids.push(id)
-  return id
-}
-
 export function preprocessSegments(
   segments: ReadonlyArray<string>,
   subPaths: ReadonlyArray<string>
