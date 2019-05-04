@@ -1,5 +1,3 @@
-const atlasSound = new FileAudioBuffer(`atlas`)
-
 class Sound {
   private readonly fileAudioBufferPlayInstancePool: FileAudioBufferPlayInstancePool
 

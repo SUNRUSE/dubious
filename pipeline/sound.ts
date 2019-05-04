@@ -6,6 +6,7 @@ import * as types from "./types"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
 import * as audio from "./audio"
+import * as cacheBusting from "./cache-busting"
 
 const fsReadFile = util.promisify(fs.readFile)
 const fsWriteFile = util.promisify(fs.writeFile)
@@ -92,12 +93,12 @@ const exported: types.PurposeImplementation["sound"] = {
       }
     }
 
-    await audio.write([left, right], paths.artifactsFile(`atlas`))
+    const written = await audio.write(state, [left, right])
 
     return {
-      code: ``,
+      code: `const atlasSound = new FileAudioBuffer(${JSON.stringify(written.filename)})`,
       items: output,
-      packed: {}
+      packed: written
     }
   },
 
@@ -105,7 +106,9 @@ const exported: types.PurposeImplementation["sound"] = {
     state: types.State,
     packed: types.Packed<"sound">
   ): Promise<void> {
-
+    for (const extension of packed.packed.extensions) {
+      await cacheBusting.release(state, `${packed.packed.filename}.${extension}`)
+    }
   }
 }
 

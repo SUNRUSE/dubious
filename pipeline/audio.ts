@@ -43,9 +43,9 @@ const libVorbisJs: {
 import settings from "./settings"
 import * as types from "./types"
 import * as utilities from "./utilities"
+import * as cacheBusting from "./cache-busting"
 
 const fsReadFile = util.promisify(fs.readFile)
-const fsWriteFile = util.promisify(fs.writeFile)
 
 export async function read(
   fromContent: types.ContentReference<string, "wav" | "flac">
@@ -125,10 +125,15 @@ export async function read(
 }
 
 export async function write(
-  fromChannels: number[][],
-  toFile: string
-): Promise<void> {
+  state: types.State,
+  fromChannels: number[][]
+): Promise<{
+  readonly filename: string
+  readonly extensions: ReadonlyArray<string>
+}> {
   const fromFloat32 = fromChannels.map(channel => new Float32Array(channel))
+  const filename = cacheBusting.generateFilename(Buffer.concat(fromFloat32.map(channel => new Uint8Array(channel.buffer))))
+  const extensions: string[] = []
   {
     let buffer: Buffer
     let possibleEncoder: null | number = null
@@ -166,11 +171,12 @@ export async function write(
         libVorbisJs._encoder_destroy(possibleEncoder)
       }
     }
-    await fsWriteFile(`${toFile}.ogg`, buffer)
+
+    await write(`ogg`, buffer)
   }
 
   if (!settings.development) {
-    await fsWriteFile(`${toFile}.wav`, nodeWav.encode(fromFloat32, {
+    await write(`wav`, nodeWav.encode(fromFloat32, {
       sampleRate: 44100,
       float: false,
       bitDepth: 8
@@ -179,7 +185,17 @@ export async function write(
     {
       const encoder = new lamejs.Mp3Encoder(fromFloat32.length, 44100, 192)
       const converted = fromFloat32.map(channel => new Int16Array(channel.map(sample => sample * 32767)))
-      await fsWriteFile(`${toFile}.mp3`, Buffer.concat([Buffer.from(encoder.encodeBuffer.apply(encoder, converted)), Buffer.from(encoder.flush())]))
+      await write(`mp3`, Buffer.concat([Buffer.from(encoder.encodeBuffer.apply(encoder, converted)), Buffer.from(encoder.flush())]))
     }
+  }
+
+  return { filename, extensions }
+
+  async function write(
+    extension: string,
+    contents: Buffer
+  ): Promise<void> {
+    extensions.push(extension)
+    await cacheBusting.request(state, `${filename}.${extension}`, contents)
   }
 }

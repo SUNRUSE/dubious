@@ -102,7 +102,10 @@ export default async function () {
       sound: {
         code: ``,
         items: [],
-        packed: {}
+        packed: {
+          filename: ``,
+          extensions: []
+        }
       },
       song: {
         code: ``,

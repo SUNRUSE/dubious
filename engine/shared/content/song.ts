@@ -3,11 +3,11 @@ class Song {
   private readonly fileAudioBufferLoopInstancePool: FileAudioBufferLoopInstancePool
 
   constructor(
-    id: number,
+    filename: string,
     leftGain: number,
     rightGain: number
   ) {
-    this.fileAudioBuffer = new FileAudioBuffer(`song-${id}`)
+    this.fileAudioBuffer = new FileAudioBuffer(filename)
     this.fileAudioBufferLoopInstancePool = new FileAudioBufferLoopInstancePool(
       this.fileAudioBuffer,
       leftGain,

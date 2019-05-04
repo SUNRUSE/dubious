@@ -1,11 +1,7 @@
-import * as fs from "fs"
-import * as util from "util"
-import * as paths from "./paths"
 import * as types from "./types"
 import * as utilities from "./utilities"
 import * as audio from "./audio"
-
-const fsUnlink = util.promisify(fs.unlink)
+import * as cacheBusting from "./cache-busting"
 
 const exported: types.PurposeImplementation["song"] = {
   async delete(
@@ -15,8 +11,9 @@ const exported: types.PurposeImplementation["song"] = {
     imported: ReadonlyArray<types.ImportedPurpose["song"]>
   ): Promise<void> {
     for (const item of imported) {
-      common.ids.splice(common.ids.indexOf(item.id), 1)
-      await fsUnlink(paths.artifactsFile(`song-${item.id}`))
+      for (const extension of item.extensions) {
+        await cacheBusting.release(state, `${item.filename}.${extension}`)
+      }
     }
   },
 
@@ -27,11 +24,11 @@ const exported: types.PurposeImplementation["song"] = {
   ): Promise<ReadonlyArray<types.ImportedPurpose["song"]>> {
     const read = await audio.read(content)
     if (read) {
-      const id = utilities.findNextId(common.ids)
-      await audio.write(read.samples, paths.artifactsFile(`song-${id}`))
+      const written = await audio.write(state, read.samples)
       return [{
         segments: utilities.preprocessSegments(content.segments, []),
-        id,
+        filename: written.filename,
+        extensions: written.extensions,
         gain: read.gain
       }]
     } else {
@@ -49,7 +46,7 @@ const exported: types.PurposeImplementation["song"] = {
         segments: song.segments,
         code: {
           type: `Song`,
-          value: `new Song(${song.id}, ${song.gain}, ${song.gain})`
+          value: `new Song(${JSON.stringify(song.filename)}, ${song.gain}, ${song.gain})`
         }
       })),
       packed: {}

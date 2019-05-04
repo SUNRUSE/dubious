@@ -21,9 +21,7 @@ export type ImportedCommonPurpose = {
     readonly ids: number[]
   }
   readonly sound: {}
-  readonly song: {
-    readonly ids: number[]
-  }
+  readonly song: {}
 }
 
 export type ImportedPurpose = {
@@ -54,7 +52,8 @@ export type ImportedPurpose = {
   }
   readonly song: {
     readonly segments: ReadonlyArray<string>
-    readonly id: number
+    readonly filename: string
+    readonly extensions: ReadonlyArray<string>
     readonly gain: number
   }
 }
@@ -63,7 +62,10 @@ export type PackedPurpose = {
   readonly data: {}
   readonly sprite: {}
   readonly background: {}
-  readonly sound: {}
+  readonly sound: {
+    readonly filename: string
+    readonly extensions: ReadonlyArray<string>
+  }
   readonly song: {}
 }
 
@@ -128,7 +130,7 @@ export type Packed<TPurpose extends Purpose> = {
   readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 26
+export const stateVersion = 27
 
 export type State = {
   firstRun: boolean
