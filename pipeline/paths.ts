@@ -48,7 +48,7 @@ export const artifactsIndexFile = () => artifactsFile(`index.js`)
 export const stateFile = () => tempFile(`state.json`)
 
 export function analyze(file: string): null | types.ContentReference<string, string> {
-  const match = file.match(/^games[\\\/]([^\\\/]+)[\\\/]([^.]+)(?:\.([a-z]+))?\.([a-z]+)\.([a-z]+)$/)
+  const match = file.match(/^games[\\\/]([^\\\/]+)[\\\/]([^.]+)(?:\.([a-z-]+))?\.([a-z]+)\.([a-z]+)$/)
   if (!match) {
     return null
   }
