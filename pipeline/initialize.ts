@@ -81,6 +81,7 @@ export default async function () {
     firstRun: true,
     version: types.stateVersion,
     htmlFragments: [],
+    cacheBustingFileUsers: {},
     contentVersions: {},
     packedContentMetadata: {
       data: {
