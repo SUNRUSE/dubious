@@ -80,6 +80,7 @@ export default async function () {
   const state: types.State = {
     firstRun: true,
     version: types.stateVersion,
+    htmlFragments: [],
     contentVersions: {},
     packedContentMetadata: {
       data: {

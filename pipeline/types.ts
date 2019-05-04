@@ -112,11 +112,12 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 23
+export const stateVersion = 24
 
 export type State = {
   firstRun: boolean
   readonly version: number
+  readonly htmlFragments: string[]
   contentVersions: {
     readonly [filename: string]: string
   }

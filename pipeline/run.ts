@@ -4,7 +4,7 @@ import * as types from "./types"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
 import purposes from "./purposes"
-import html from "./html"
+import * as html from "./html"
 import codeGeneration from "./code-generation"
 
 const fsReadFile = util.promisify(fs.readFile)
@@ -64,7 +64,7 @@ export default async function (
     .filter(file => Object.prototype.hasOwnProperty.call(state.contentVersions, file))
     .filter(file => contentVersions[file] === state.contentVersions[file])
 
-  await html(addedFiles, updatedFiles, deletedFiles, unmodifiedFiles)
+  await html.generateFavicons(state, addedFiles, updatedFiles, deletedFiles, unmodifiedFiles)
 
   const addedContent = addedFiles
     .map(paths.analyze)
@@ -123,6 +123,9 @@ export default async function (
   // This is always done as the generated file isn't in different places if localization or environment are changed.
   console.log(`Generating content code...`)
   await codeGeneration(state)
+
+  console.log(`Generating HTML...`)
+  await html.generateHtml(state)
 
   console.log(`Writing state file...`)
   state.firstRun = false
