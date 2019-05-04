@@ -1,5 +1,7 @@
 const backgroundVertexData = new Float32Array(16)
-const backgroundTextures: GlFrameCachedOptionalImageTexture[] = []
+const backgroundTextures: {
+  [filename: string]: GlFrameCachedOptionalImageTexture
+} = {}
 
 class Background {
   private readonly texture: GlFrameCachedOptionalImageTexture
@@ -13,15 +15,15 @@ class Background {
   private readonly vMax: number
 
   constructor(
-    id: number,
+    filename: string,
     private readonly width: number,
     private readonly height: number,
     offsetLeft: number,
     offsetTop: number
   ) {
-    if (!backgroundTextures[id]) {
-      backgroundTextures[id] = new GlFrameCachedOptionalImageTexture(
-        `background-${id}.png`,
+    if (!Object.prototype.hasOwnProperty.call(backgroundTextures, filename)) {
+      backgroundTextures[filename] = new GlFrameCachedOptionalImageTexture(
+        `${filename}.png`,
         GlConstants.TEXTURE_2D,
         GlConstants.RGBA,
         GlConstants.UNSIGNED_BYTE,
@@ -32,7 +34,7 @@ class Background {
         false
       )
     }
-    this.texture = backgroundTextures[id]
+    this.texture = backgroundTextures[filename]
 
     this.xMin = offsetLeft - 0.5
     this.yMin = offsetTop - 0.5

@@ -9,8 +9,8 @@ import * as paths from "./paths"
 import * as utilities from "./utilities"
 import * as png from "./png"
 import * as aseprite from "./aseprite"
+import * as cacheBusting from "./cache-busting"
 
-const fsUnlink = util.promisify(fs.unlink)
 const fsReadFile = util.promisify(fs.readFile)
 const mkdirp = util.promisify(_mkdirp)
 const rimraf = util.promisify(_rimraf)
@@ -23,8 +23,7 @@ const exported: types.PurposeImplementation["background"] = {
     imported: ReadonlyArray<types.ImportedPurpose["background"]>
   ): Promise<void> {
     for (const item of imported) {
-      common.ids.splice(common.ids.indexOf(item.id), 1)
-      await fsUnlink(paths.artifactsFile(`background-${item.id}.png`))
+      await cacheBusting.release(state, `${item.filename}.png`)
     }
     await rimraf(paths.importedDirectory(content))
   },
@@ -39,11 +38,9 @@ const exported: types.PurposeImplementation["background"] = {
         const pngContent = await png.read(content.source)
         const trimBounds = png.trim(pngContent)
         if (trimBounds) {
-          const id = utilities.findNextId(common.ids)
-          await png.write(trimBounds.png, paths.artifactsFile(`background-${id}.png`))
           return [{
             segments: utilities.preprocessSegments(content.segments, []),
-            id: id,
+            filename: await png.writeWithCacheBusting(state, trimBounds.png),
             width: trimBounds.width,
             height: trimBounds.height,
             offsetX: trimBounds.left,
@@ -90,7 +87,7 @@ const exported: types.PurposeImplementation["background"] = {
         } = JSON.parse(dataJson)
         if (data.meta.frameTags.length) {
           const exported: {
-            readonly id: number
+            readonly filename: string
             readonly png: pngjs.PNG
           }[] = []
           const output: types.ImportedPurpose["background"][] = []
@@ -147,7 +144,7 @@ const exported: types.PurposeImplementation["background"] = {
                           ? [frameTag.name]
                           : [frameTag.name, `${i}`]
                       ),
-                      id: existing.id,
+                      filename: existing.filename,
                       width: trimmed.width,
                       height: trimmed.height,
                       offsetX: trimmed.left - pngContent.width / 2,
@@ -158,10 +155,9 @@ const exported: types.PurposeImplementation["background"] = {
                   }
                 }
                 if (needsAdding) {
-                  const id = utilities.findNextId(common.ids)
-                  await png.write(trimmed.png, paths.artifactsFile(`background-${id}.png`))
+                  const filename = await png.writeWithCacheBusting(state, trimmed.png)
                   exported.push({
-                    id,
+                    filename,
                     png: trimmed.png
                   })
                   output.push({
@@ -171,7 +167,7 @@ const exported: types.PurposeImplementation["background"] = {
                         ? [frameTag.name]
                         : [frameTag.name, `${i}`]
                     ),
-                    id,
+                    filename,
                     width: trimmed.width,
                     height: trimmed.height,
                     offsetX: trimmed.left - pngContent.width / 2,
@@ -187,11 +183,10 @@ const exported: types.PurposeImplementation["background"] = {
           const pngContent = await png.read(paths.importedFile(content, `0.png`))
           const trimmed = png.trim(pngContent)
           if (trimmed) {
-            const id = utilities.findNextId(common.ids)
-            await png.write(trimmed.png, paths.artifactsFile(`background-${id}.png`))
+            const filename = await png.writeWithCacheBusting(state, trimmed.png)
             return [{
               segments: utilities.preprocessSegments(content.segments, []),
-              id: id,
+              filename,
               width: trimmed.width,
               height: trimmed.height,
               offsetX: trimmed.left - pngContent.width / 2,
@@ -214,7 +209,7 @@ const exported: types.PurposeImplementation["background"] = {
         segments: background.segments,
         code: {
           type: `Background`,
-          value: `new Background(${background.id}, ${background.width}, ${background.height}, ${background.offsetX}, ${background.offsetY})`
+          value: `new Background(${JSON.stringify(background.filename)}, ${background.width}, ${background.height}, ${background.offsetX}, ${background.offsetY})`
         }
       })),
       packed: {}

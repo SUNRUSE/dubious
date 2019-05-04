@@ -17,9 +17,7 @@ export type Purpose = `data` | `sprite` | `background` | `sound` | `song`
 export type ImportedCommonPurpose = {
   readonly data: {}
   readonly sprite: {}
-  readonly background: {
-    readonly ids: number[]
-  }
+  readonly background: {}
   readonly sound: {}
   readonly song: {}
 }
@@ -38,7 +36,7 @@ export type ImportedPurpose = {
   }
   readonly background: {
     readonly segments: ReadonlyArray<string>
-    readonly id: number
+    readonly filename: string
     readonly width: number
     readonly height: number
     readonly offsetX: number
@@ -130,7 +128,7 @@ export type Packed<TPurpose extends Purpose> = {
   readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 27
+export const stateVersion = 28
 
 export type State = {
   firstRun: boolean
