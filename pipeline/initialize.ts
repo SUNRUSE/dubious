@@ -92,7 +92,9 @@ export default async function () {
       sprite: {
         code: ``,
         items: [],
-        packed: {}
+        packed: {
+          filename: ``
+        }
       },
       background: {
         code: ``,

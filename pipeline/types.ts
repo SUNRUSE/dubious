@@ -58,7 +58,9 @@ export type ImportedPurpose = {
 
 export type PackedPurpose = {
   readonly data: {}
-  readonly sprite: {}
+  readonly sprite: {
+    readonly filename: string
+  }
   readonly background: {}
   readonly sound: {
     readonly filename: string
@@ -128,7 +130,7 @@ export type Packed<TPurpose extends Purpose> = {
   readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 28
+export const stateVersion = 29
 
 export type State = {
   firstRun: boolean

@@ -9,6 +9,7 @@ import settings from "./settings"
 import * as utilities from "./utilities"
 import * as png from "./png"
 import * as aseprite from "./aseprite"
+import * as cacheBusting from "./cache-busting"
 
 const mkdirp = util.promisify(_mkdirp)
 const rimraf = util.promisify(_rimraf)
@@ -190,9 +191,9 @@ const exported: types.PurposeImplementation["sprite"] = {
     imported: ReadonlyArray<types.ImportedPurpose["sprite"]>
   ): Promise<types.Packed<"sprite">> {
     if (!imported.length) {
-      await png.write(
-        new pngjs.PNG({ width: 1, height: 1 }),
-        paths.artifactsFile(`atlas.png`)
+      const filename = await png.writeWithCacheBusting(
+        state,
+        new pngjs.PNG({ width: 1, height: 1 })
       )
       return {
         code: `
@@ -200,7 +201,9 @@ const atlasWidth = 1
 const atlasHeight = 1
 `,
         items: [],
-        packed: {}
+        packed: {
+          filename
+        }
       }
     }
 
@@ -528,7 +531,7 @@ const atlasHeight = 1
           frame.y
         )
       }
-      await png.write(atlas, paths.artifactsFile(`atlas.png`))
+      const filename = await png.writeWithCacheBusting(state, atlas)
       const output: types.PackedItem[] = []
       packedFrames.forEach(packedFrame => packedFrame.unpacked.users.forEach(user => output.push({
         segments: user,
@@ -541,9 +544,22 @@ const atlasHeight = 1
         code: `
 const atlasWidth = ${width}
 const atlasHeight = ${height}
+const atlasTexture = new GlGameplayCriticalImageTexture(
+  ${JSON.stringify(`${filename}.png`)},
+  GlConstants.TEXTURE_2D,
+  GlConstants.RGBA,
+  GlConstants.UNSIGNED_BYTE,
+  GlConstants.CLAMP_TO_EDGE,
+  GlConstants.CLAMP_TO_EDGE,
+  GlConstants.NEAREST,
+  GlConstants.NEAREST,
+  false
+)
 `,
         items: output,
-        packed: {}
+        packed: {
+          filename
+        }
       }
     }
   },
@@ -552,7 +568,7 @@ const atlasHeight = ${height}
     state: types.State,
     packed: types.Packed<"sprite">
   ): Promise<void> {
-
+    await cacheBusting.release(state, `${packed.packed.filename}.png`)
   }
 }
 
