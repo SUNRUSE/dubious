@@ -1,14 +1,9 @@
 import * as childProcess from "child_process"
 import * as fs from "fs"
-import * as util from "util"
 import * as pngjs from "pngjs"
 const pngcrushBin = require(`pngcrush-bin`)
-import tempfile = require("tempfile")
-import * as _rimraf from "rimraf"
 import * as utilities from "./utilities"
 import settings from "./settings"
-
-const rimraf = util.promisify(_rimraf)
 
 export async function read(pngPath: string): Promise<pngjs.PNG> {
   const png = new pngjs.PNG()
@@ -32,36 +27,24 @@ export async function write(
   fromPng: pngjs.PNG,
   toFile: string
 ): Promise<void> {
+  const writeStream = fs.createWriteStream(toFile)
+  fromPng.pack().pipe(writeStream)
+  await new Promise((resolve, reject) => writeStream
+    .on(`error`, reject)
+    .on(`finish`, resolve)
+  )
   if (!settings.development) {
-    const temp = tempfile()
-    try {
-      await directWrite(temp)
-      await new Promise((resolve, reject) => childProcess
-        .spawn(
-          pngcrushBin,
-          [`-brute`, `-force`, `-q`, `-reduce`, temp, toFile]
-        ).on(`exit`, status => {
-          if (status === 0) {
-            resolve()
-          } else {
-            reject(new Error(`Failed to invoke pngcrush to compress a PNG file.`))
-          }
-        }))
-    } catch (e) {
-      await rimraf(temp)
-      throw e
-    }
-  } else {
-    await directWrite(toFile)
-  }
-
-  async function directWrite(toFile: string): Promise<void> {
-    const writeStream = fs.createWriteStream(toFile)
-    fromPng.pack().pipe(writeStream)
-    await new Promise((resolve, reject) => writeStream
-      .on(`error`, reject)
-      .on(`finish`, resolve)
-    )
+    await new Promise((resolve, reject) => childProcess
+      .spawn(
+        pngcrushBin,
+        [`-brute`, `-force`, `-q`, `-reduce`, `-ow`, toFile]
+      ).on(`exit`, status => {
+        if (status === 0) {
+          resolve()
+        } else {
+          reject(new Error(`Failed to invoke pngcrush to compress a PNG file.`))
+        }
+      }))
   }
 }
 
