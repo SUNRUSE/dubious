@@ -20,10 +20,10 @@ export async function read(pngPath: string): Promise<pngjs.PNG> {
       .on(`parsed`, resolve)
   })
   for (let pixel = 0; pixel < png.data.length; pixel += 4) {
-    const alpha = png.data[pixel + 3] / 255 / 255
-    png.data[pixel] = Math.floor(255 * Math.pow(png.data[pixel] * alpha, 1.0 / 2.2))
-    png.data[pixel + 1] = Math.floor(255 * Math.pow(png.data[pixel + 1] * alpha, 1.0 / 2.2))
-    png.data[pixel + 2] = Math.floor(255 * Math.pow(png.data[pixel + 2] * alpha, 1.0 / 2.2))
+    const alpha = png.data[pixel + 3] / 255
+    png.data[pixel] = Math.floor(255 * Math.pow(png.data[pixel] / 255, 1.0 / 2.2) * alpha)
+    png.data[pixel + 1] = Math.floor(255 * Math.pow(png.data[pixel + 1] / 255, 1.0 / 2.2) * alpha)
+    png.data[pixel + 2] = Math.floor(255 * Math.pow(png.data[pixel + 2] / 255, 1.0 / 2.2) * alpha)
   }
   return png
 }
