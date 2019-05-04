@@ -38,7 +38,7 @@ const exported: types.PurposeImplementation["background"] = {
         const trimBounds = png.trim(pngContent)
         if (trimBounds) {
           const id = utilities.findNextId(common.ids)
-          await png.write(trimBounds.png, paths.artifactsFile(`background-${id}.png`), true)
+          await png.write(trimBounds.png, paths.artifactsFile(`background-${id}.png`))
           return [{
             segments: utilities.preprocessSegments(content.segments, []),
             id: id,
@@ -157,7 +157,7 @@ const exported: types.PurposeImplementation["background"] = {
                 }
                 if (needsAdding) {
                   const id = utilities.findNextId(common.ids)
-                  await png.write(trimmed.png, paths.artifactsFile(`background-${id}.png`), true)
+                  await png.write(trimmed.png, paths.artifactsFile(`background-${id}.png`))
                   exported.push({
                     id,
                     png: trimmed.png
@@ -186,7 +186,7 @@ const exported: types.PurposeImplementation["background"] = {
           const trimmed = png.trim(pngContent)
           if (trimmed) {
             const id = utilities.findNextId(common.ids)
-            await png.write(trimmed.png, paths.artifactsFile(`background-${id}.png`), true)
+            await png.write(trimmed.png, paths.artifactsFile(`background-${id}.png`))
             return [{
               segments: utilities.preprocessSegments(content.segments, []),
               id: id,

@@ -189,8 +189,7 @@ const exported: types.PurposeImplementation["sprite"] = {
     if (!imported.length) {
       await png.write(
         new pngjs.PNG({ width: 1, height: 1 }),
-        paths.artifactsFile(`atlas.png`),
-        true
+        paths.artifactsFile(`atlas.png`)
       )
       return {
         code: `
@@ -525,7 +524,7 @@ const atlasHeight = 1
           frame.y
         )
       }
-      await png.write(atlas, paths.artifactsFile(`atlas.png`), true)
+      await png.write(atlas, paths.artifactsFile(`atlas.png`))
       const output: types.PackedItem[] = []
       packedFrames.forEach(packedFrame => packedFrame.unpacked.users.forEach(user => output.push({
         segments: user,

@@ -30,13 +30,12 @@ export async function read(pngPath: string): Promise<pngjs.PNG> {
 
 export async function write(
   fromPng: pngjs.PNG,
-  toFile: string,
-  compress: boolean
+  toFile: string
 ): Promise<void> {
-  if (compress && !settings.development) {
+  if (!settings.development) {
     const temp = tempfile()
     try {
-      await write(fromPng, temp, false)
+      await directWrite(temp)
       await new Promise((resolve, reject) => childProcess
         .spawn(
           pngcrushBin,
@@ -53,6 +52,10 @@ export async function write(
       throw e
     }
   } else {
+    await directWrite(toFile)
+  }
+
+  async function directWrite(toFile: string): Promise<void> {
     const writeStream = fs.createWriteStream(toFile)
     fromPng.pack().pipe(writeStream)
     await new Promise((resolve, reject) => writeStream
