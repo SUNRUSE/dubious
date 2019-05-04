@@ -15,6 +15,7 @@ export const cache = new utilities.KeyedCache(async path => new Float32Array(awa
 
 const exported: types.PurposeImplementation["sound"] = {
   async delete(
+    state: types.State,
     common: types.ImportedCommonPurpose["sound"],
     content: types.ContentReference<"sound", types.PurposeExtensionType["sound"]>,
     imported: ReadonlyArray<types.ImportedPurpose["sound"]>
@@ -24,6 +25,7 @@ const exported: types.PurposeImplementation["sound"] = {
   },
 
   async import(
+    state: types.State,
     common: types.ImportedCommonPurpose["sound"],
     content: types.ContentReference<"sound", types.PurposeExtensionType["sound"]>
   ): Promise<ReadonlyArray<types.ImportedPurpose["sound"]>> {
@@ -49,6 +51,7 @@ const exported: types.PurposeImplementation["sound"] = {
   },
 
   async pack(
+    state: types.State,
     imported: ReadonlyArray<types.ImportedPurpose["sound"]>
   ): Promise<types.Packed<"sound">> {
     type UnpackedSound = {
@@ -99,6 +102,7 @@ const exported: types.PurposeImplementation["sound"] = {
   },
 
   async deletePacked(
+    state: types.State,
     packed: types.Packed<"sound">
   ): Promise<void> {
 

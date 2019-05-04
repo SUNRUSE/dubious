@@ -15,6 +15,7 @@ const rimraf = util.promisify(_rimraf)
 
 const exported: types.PurposeImplementation["sprite"] = {
   async delete(
+    state: types.State,
     common: types.ImportedCommonPurpose["sprite"],
     content: types.ContentReference<"sprite", types.PurposeExtensionType["sprite"]>,
     imported: ReadonlyArray<types.ImportedPurpose["sprite"]>
@@ -26,6 +27,7 @@ const exported: types.PurposeImplementation["sprite"] = {
   },
 
   async import(
+    state: types.State,
     common: types.ImportedCommonPurpose["sprite"],
     content: types.ContentReference<"sprite", types.PurposeExtensionType["sprite"]>
   ): Promise<ReadonlyArray<types.ImportedPurpose["sprite"]>> {
@@ -184,6 +186,7 @@ const exported: types.PurposeImplementation["sprite"] = {
   },
 
   async pack(
+    state: types.State,
     imported: ReadonlyArray<types.ImportedPurpose["sprite"]>
   ): Promise<types.Packed<"sprite">> {
     if (!imported.length) {
@@ -546,6 +549,7 @@ const atlasHeight = ${height}
   },
 
   async deletePacked(
+    state: types.State,
     packed: types.Packed<"sprite">
   ): Promise<void> {
 

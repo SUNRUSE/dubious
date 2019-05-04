@@ -9,6 +9,7 @@ const fsUnlink = util.promisify(fs.unlink)
 
 const exported: types.PurposeImplementation["song"] = {
   async delete(
+    state: types.State,
     common: types.ImportedCommonPurpose["song"],
     content: types.ContentReference<"song", types.PurposeExtensionType["song"]>,
     imported: ReadonlyArray<types.ImportedPurpose["song"]>
@@ -20,6 +21,7 @@ const exported: types.PurposeImplementation["song"] = {
   },
 
   async import(
+    state: types.State,
     common: types.ImportedCommonPurpose["song"],
     content: types.ContentReference<"song", types.PurposeExtensionType["song"]>
   ): Promise<ReadonlyArray<types.ImportedPurpose["song"]>> {
@@ -38,6 +40,7 @@ const exported: types.PurposeImplementation["song"] = {
   },
 
   async pack(
+    state: types.State,
     imported: ReadonlyArray<types.ImportedPurpose["song"]>
   ): Promise<types.Packed<"song">> {
     return {
@@ -54,6 +57,7 @@ const exported: types.PurposeImplementation["song"] = {
   },
 
   async deletePacked(
+    state: types.State,
     packed: types.Packed<"song">
   ): Promise<void> {
 

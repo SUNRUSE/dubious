@@ -93,18 +93,22 @@ export const PurposeExtensionValue: {
 export type PurposeImplementation = {
   readonly [TPurpose in Purpose]: {
     delete(
+      state: State,
       common: ImportedCommonPurpose[TPurpose],
       content: ContentReference<TPurpose, PurposeExtensionType[TPurpose]>,
       imported: ReadonlyArray<ImportedPurpose[TPurpose]>
     ): Promise<void>
     import(
+      state: State,
       common: ImportedCommonPurpose[TPurpose],
       content: ContentReference<TPurpose, PurposeExtensionType[TPurpose]>
     ): Promise<ReadonlyArray<ImportedPurpose[TPurpose]>>
     pack(
+      state: State,
       imported: ReadonlyArray<ImportedPurpose[TPurpose]>
     ): Promise<Packed<TPurpose>>
     deletePacked(
+      state: State,
       packed: Packed<TPurpose>
     ): Promise<void>
   }
