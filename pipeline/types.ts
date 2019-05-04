@@ -112,7 +112,7 @@ export type Packed = {
   readonly code: string
 }
 
-export const stateVersion = 22
+export const stateVersion = 23
 
 export type State = {
   firstRun: boolean

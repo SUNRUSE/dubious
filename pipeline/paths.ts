@@ -68,7 +68,11 @@ export function analyze(file: string): null | types.ContentReference<string, str
       path,
       [`games`, settings.game]
         .concat(segments.slice(0, segments.length - 1))
-        .concat([`${segments[segments.length - 1]}.${purpose}.${extension}`])
+        .concat([
+          localization === undefined
+            ? `${segments[segments.length - 1]}.${purpose}.${extension}`
+            : `${segments[segments.length - 1]}.${localization}.${purpose}.${extension}`
+        ])
     ),
     segments,
     purpose,
