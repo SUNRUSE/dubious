@@ -119,12 +119,11 @@ export type Packed<TPurpose extends Purpose> = {
   readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 30
+export const stateVersion = 31
 
 export type State = {
   firstRun: boolean
   readonly version: number
-  readonly htmlFragments: string[]
   readonly cacheBustingFileUsers: {
     [filename: string]: number
   }

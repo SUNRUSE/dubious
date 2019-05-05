@@ -132,7 +132,7 @@ export default async function (
   await codeGeneration(state)
 
   console.log(`Generating HTML...`)
-  await html.generateHtml(state)
+  await html.generateHtml()
 
   console.log(`Writing state file...`)
   state.firstRun = false

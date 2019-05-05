@@ -149,9 +149,9 @@ export async function generateFavicons(
         pixel_art: true
       })
 
-      state.htmlFragments.length = 0
-      state.htmlFragments.push(`<title>${selectedLocalization.title}</title>`)
-      response.html.forEach(fragment => state.htmlFragments.push(fragment))
+      let htmlFragments = `<title>${selectedLocalization.title}</title>`
+      response.html.forEach(fragment => htmlFragments += fragment)
+      fs.writeFileSync(paths.tempHtmlFragmentsFile(), htmlFragments)
 
       await utilities.asyncProgressBar(
         settings.development ? `Writing...` : `Compressing/writing...`,
@@ -172,15 +172,25 @@ export async function generateFavicons(
   }
 }
 
-export async function generateHtml(
-  state: types.State,
-): Promise<void> {
+export async function generateHtml(): Promise<void> {
+  let htmlFragments: string
+  try {
+    htmlFragments = fs.readFileSync(paths.tempHtmlFragmentsFile(), `utf8`)
+  } catch (e) {
+    if (e.code === `ENOENT`) {
+      console.warn(`HTML fragments not yet generated; HTML will not be generated.`)
+      return
+    } else {
+      throw e
+    }
+  }
+
   let html = `<!DOCTYPE html>
 <html style="background: black; color: white; user-select: none; -moz-user-select: none; -ms-user-select: none; cursor: default;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  ${state.htmlFragments.join(``)}
+  ${htmlFragments}
 </head>
 <body style="display: table; position: fixed; left: 0; top: 0; width: 100%; height: 100%; margin: 0;">
   <pre id="message" style="display: table-cell; vertical-align: middle; text-align: center; font-family: sans-serif; font-size: 0.4cm;">Now loading... (please ensure that JavaScript is enabled)</pre>

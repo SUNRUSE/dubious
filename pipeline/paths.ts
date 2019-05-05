@@ -28,6 +28,7 @@ export const tempDirectory = () => path.join(
 )
 
 export const tempFile = (name: string): string => path.join(tempDirectory(), name)
+export const tempHtmlFragmentsFile = () => tempFile(`fragments.html`)
 
 export const typescriptProjectFile = () => srcFile(`tsconfig.json`)
 export const typescriptIndexFile = () => srcFile(`index.generated.ts`)
