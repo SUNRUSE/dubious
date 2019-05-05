@@ -7,6 +7,7 @@ import settings from "./settings"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
 import run from "./run"
+import * as html from "./html"
 
 const fsStat = util.promisify(fs.stat)
 const fsReadFile = util.promisify(fs.readFile)
@@ -90,6 +91,7 @@ export default async function (): Promise<void> {
       }
     })
   )
+  await html.generateHtml()
   if (!settings.development) {
     console.log(`Running UglifyJS...`)
     const js = await fsReadFile(paths.artifactsIndexFile(), { encoding: `utf8` })

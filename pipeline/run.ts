@@ -131,9 +131,6 @@ export default async function (
   console.log(`Generating content code...`)
   await codeGeneration(state)
 
-  console.log(`Generating HTML...`)
-  await html.generateHtml()
-
   console.log(`Writing state file...`)
   state.firstRun = false
   state.contentVersions = contentVersions

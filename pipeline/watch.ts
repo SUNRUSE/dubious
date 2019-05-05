@@ -5,6 +5,7 @@ import * as express from "express"
 import * as paths from "./paths"
 import settings from "./settings"
 import run from "./run"
+import * as html from "./html"
 
 export default async function (): Promise<void> {
   const port = settings.host
@@ -118,5 +119,43 @@ export default async function (): Promise<void> {
         }
       )
     }, ranAtLeastOnce ? 200 : 5000)
+  }
+
+  let runningHtml = false
+  let invalidatedHtml = false
+  chokidar
+    .watch(paths.artifactsIndexFile())
+    .on(`add`, handleHtml)
+    .on(`change`, handleHtml)
+    .on(`error`, error => { throw error })
+
+  function handleHtml(): void {
+    if (runningHtml) {
+      console.log(`Waiting to restart HTML generation...`)
+      invalidatedHtml = true
+      return
+    }
+
+    console.log(`Starting HTML generation...`)
+
+    html
+      .generateHtml()
+      .then(
+        () => {
+          runningHtml = false
+          if (invalidatedHtml) {
+            invalidatedHtml = false
+            handleHtml()
+          }
+        },
+        error => {
+          console.error(`HTML generation failed; "${error}".`)
+          runningHtml = false
+          if (invalidatedHtml) {
+            invalidatedHtml = false
+            handleHtml()
+          }
+        }
+      )
   }
 }
