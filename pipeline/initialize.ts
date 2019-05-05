@@ -32,7 +32,7 @@ export default async function () {
         noFallthroughCasesInSwitch: true,
         noImplicitThis: true,
         target: "es5",
-        outFile: path.join(paths.toRootFromSrcDirectory, paths.artifactsFile(`index.js`))
+        outFile: path.join(paths.toRootFromSrcDirectory, paths.artifactsIndexFile())
       }
     })
   )
