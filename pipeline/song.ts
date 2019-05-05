@@ -6,7 +6,6 @@ import * as cacheBusting from "./cache-busting"
 const exported: types.PurposeImplementation["song"] = {
   async delete(
     state: types.State,
-    common: types.ImportedCommonPurpose["song"],
     content: types.ContentReference<"song", types.PurposeExtensionType["song"]>,
     imported: ReadonlyArray<types.ImportedPurpose["song"]>
   ): Promise<void> {
@@ -19,7 +18,6 @@ const exported: types.PurposeImplementation["song"] = {
 
   async import(
     state: types.State,
-    common: types.ImportedCommonPurpose["song"],
     content: types.ContentReference<"song", types.PurposeExtensionType["song"]>
   ): Promise<ReadonlyArray<types.ImportedPurpose["song"]>> {
     const read = await audio.read(content)

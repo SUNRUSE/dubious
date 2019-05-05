@@ -9,14 +9,12 @@ const fsReadFile = util.promisify(fs.readFile)
 const exported: types.PurposeImplementation["data"] = {
   async delete(
     state: types.State,
-    common: types.ImportedCommonPurpose["data"],
     content: types.ContentReference<"data", types.PurposeExtensionType["data"]>,
     imported: ReadonlyArray<types.ImportedPurpose["data"]>
   ): Promise<void> { },
 
   async import(
     state: types.State,
-    common: types.ImportedCommonPurpose["data"],
     content: types.ContentReference<"data", types.PurposeExtensionType["data"]>
   ): Promise<ReadonlyArray<types.ImportedPurpose["data"]>> {
     const output: types.ImportedPurpose["data"][] = []

@@ -123,17 +123,6 @@ export default async function () {
   console.log(`Creating artifacts directory...`)
   await mkdirp(paths.artifactsDirectory())
 
-  const defaultCommon: types.ImportedCommonPurpose = {
-    data: {},
-    sprite: {},
-    background: {
-      ids: []
-    },
-    sound: {},
-    song: {
-      ids: []
-    }
-  }
   await utilities.asyncProgressBar(
     `Creating imported cache files...`,
     Object.keys(types.PurposeExtensionValue),
@@ -141,10 +130,7 @@ export default async function () {
     async purposeString => {
       const purpose = purposeString as types.Purpose
       await mkdirp(paths.importedPurposeDirectory(purpose))
-      await fsWriteFile(paths.importedPurposeCache(purpose), JSON.stringify({
-        common: defaultCommon[purpose],
-        byFile: {}
-      }))
+      await fsWriteFile(paths.importedPurposeCache(purpose), JSON.stringify({}))
     }
   )
 

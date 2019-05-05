@@ -98,14 +98,14 @@ export default async function (
     const implementation = purposes[content.purpose].delete as any
     const metadata = await importedByPurpose.get(content.purpose)
     const source = content.source
-    await implementation(state, metadata.common, content as any, metadata.byFile[source])
-    delete metadata.byFile[source]
+    await implementation(state, content as any, metadata[source])
+    delete metadata[source]
   })
   await utilities.asyncProgressBar(`Importing content...`, updatedContent.concat(addedContent), true, async content => {
     const implementation = purposes[content.purpose].import as any
     const metadata = await importedByPurpose.get(content.purpose)
     const source = content.source
-    metadata.byFile[source] = await implementation(state, metadata.common, content as any)
+    metadata[source] = await implementation(state, content as any)
   })
 
   await utilities.asyncProgressBar(`Writing cached imported content...`, purposesToPack, true, async purpose => await fsWriteFile(paths.importedPurposeCache(purpose), JSON.stringify(await importedByPurpose.get(purpose))))
@@ -121,8 +121,8 @@ export default async function (
     const implementation = purposes[purpose].pack as any
     const metadata = await importedByPurpose.get(purpose)
     const allMetadata: any[] = []
-    for (const key in metadata.byFile) {
-      metadata.byFile[key].forEach(item => allMetadata.push(item))
+    for (const key in metadata) {
+      metadata[key].forEach(item => allMetadata.push(item))
     }
     state.packedContentMetadata[purpose] = await implementation(state, allMetadata)
   })

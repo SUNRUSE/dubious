@@ -17,7 +17,6 @@ const rimraf = util.promisify(_rimraf)
 const exported: types.PurposeImplementation["sprite"] = {
   async delete(
     state: types.State,
-    common: types.ImportedCommonPurpose["sprite"],
     content: types.ContentReference<"sprite", types.PurposeExtensionType["sprite"]>,
     imported: ReadonlyArray<types.ImportedPurpose["sprite"]>
   ): Promise<void> {
@@ -29,7 +28,6 @@ const exported: types.PurposeImplementation["sprite"] = {
 
   async import(
     state: types.State,
-    common: types.ImportedCommonPurpose["sprite"],
     content: types.ContentReference<"sprite", types.PurposeExtensionType["sprite"]>
   ): Promise<ReadonlyArray<types.ImportedPurpose["sprite"]>> {
     switch (content.extension) {

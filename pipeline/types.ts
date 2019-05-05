@@ -14,14 +14,6 @@ export type JsonObject = {
 
 export type Purpose = `data` | `sprite` | `background` | `sound` | `song`
 
-export type ImportedCommonPurpose = {
-  readonly data: {}
-  readonly sprite: {}
-  readonly background: {}
-  readonly sound: {}
-  readonly song: {}
-}
-
 export type ImportedPurpose = {
   readonly data: PackedItem
   readonly sprite: {
@@ -70,8 +62,7 @@ export type PackedPurpose = {
 }
 
 export type ImportedPurposeFile<TPurpose extends Purpose> = {
-  readonly common: ImportedCommonPurpose[TPurpose]
-  readonly byFile: { [file: string]: ReadonlyArray<ImportedPurpose[TPurpose]> }
+  [file: string]: ReadonlyArray<ImportedPurpose[TPurpose]>
 }
 
 export type PurposeExtensionType = {
@@ -96,13 +87,11 @@ export type PurposeImplementation = {
   readonly [TPurpose in Purpose]: {
     delete(
       state: State,
-      common: ImportedCommonPurpose[TPurpose],
       content: ContentReference<TPurpose, PurposeExtensionType[TPurpose]>,
       imported: ReadonlyArray<ImportedPurpose[TPurpose]>
     ): Promise<void>
     import(
       state: State,
-      common: ImportedCommonPurpose[TPurpose],
       content: ContentReference<TPurpose, PurposeExtensionType[TPurpose]>
     ): Promise<ReadonlyArray<ImportedPurpose[TPurpose]>>
     pack(
@@ -130,7 +119,7 @@ export type Packed<TPurpose extends Purpose> = {
   readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 29
+export const stateVersion = 30
 
 export type State = {
   firstRun: boolean
