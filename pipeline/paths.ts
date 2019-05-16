@@ -29,6 +29,7 @@ export const tempDirectory = () => path.join(
 
 export const tempFile = (name: string): string => path.join(tempDirectory(), name)
 export const tempHtmlFragmentsFile = () => tempFile(`fragments.html`)
+export const tempIndexFile = () => tempFile(`index.js`)
 
 export const typescriptProjectFile = () => srcFile(`tsconfig.json`)
 export const typescriptIndexFile = () => srcFile(`index.generated.ts`)
@@ -44,7 +45,6 @@ export const artifactsDirectory = () => path.join(
 )
 
 export const artifactsFile = (name: string) => path.join(artifactsDirectory(), name)
-export const artifactsIndexFile = () => artifactsFile(`index.js`)
 
 export const stateFile = () => tempFile(`state.json`)
 

@@ -189,7 +189,7 @@ export async function generateHtml(): Promise<void> {
     }
   }
 
-  let indexFile = await fsReadFile(paths.artifactsIndexFile(), `utf8`)
+  let indexFile = await fsReadFile(paths.tempIndexFile(), `utf8`)
 
   if (!settings.development) {
     console.log(`Running UglifyJS...`)

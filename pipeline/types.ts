@@ -119,7 +119,7 @@ export type Packed<TPurpose extends Purpose> = {
   readonly packed: PackedPurpose[TPurpose]
 }
 
-export const stateVersion = 31
+export const stateVersion = 32
 
 export type State = {
   firstRun: boolean
