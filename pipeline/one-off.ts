@@ -2,7 +2,6 @@ import * as childProcess from "child_process"
 import * as fs from "fs"
 import * as util from "util"
 import * as recursiveReaddir from "recursive-readdir"
-import * as uglifyJs from "uglify-js"
 import settings from "./settings"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
@@ -10,8 +9,6 @@ import run from "./run"
 import * as html from "./html"
 
 const fsStat = util.promisify(fs.stat)
-const fsReadFile = util.promisify(fs.readFile)
-const fsWriteFile = util.promisify(fs.writeFile)
 
 export default async function (): Promise<void> {
   const contentVersions: {
@@ -92,23 +89,4 @@ export default async function (): Promise<void> {
     })
   )
   await html.generateHtml()
-  if (!settings.development) {
-    console.log(`Running UglifyJS...`)
-    const js = await fsReadFile(paths.artifactsIndexFile(), { encoding: `utf8` })
-    const uglified = uglifyJs.minify(
-      js, {
-        compress: {
-          toplevel: true
-        },
-        mangle: {
-          toplevel: true
-        }
-      }
-    )
-    if (uglified.error) {
-      utilities.reportNonFatalError(`Failed to uglify JS: "${uglified.error}"`)
-    } else {
-      await fsWriteFile(paths.artifactsIndexFile(), uglified.code)
-    }
-  }
 }

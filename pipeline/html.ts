@@ -5,15 +5,19 @@ import * as favicons from "favicons"
 const isPng = require(`is-png`)
 const pngcrushBin = require(`pngcrush-bin`)
 const execBuffer = require(`exec-buffer`)
+import * as uglifyJs from "uglify-js"
+import * as _rimraf from "rimraf"
 import * as htmlMinifier from "html-minifier"
 import * as types from "./types"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
 import * as aseprite from "./aseprite"
 import settings from "./settings"
+import * as cacheBusting from "./cache-busting"
 
 const fsReadFile = util.promisify(fs.readFile)
 const fsWriteFile = util.promisify(fs.writeFile)
+const rimraf = util.promisify(_rimraf)
 
 export async function generateFavicons(
   state: types.State,
@@ -185,6 +189,31 @@ export async function generateHtml(): Promise<void> {
     }
   }
 
+  let indexFile = await fsReadFile(paths.artifactsIndexFile(), `utf8`)
+
+  if (!settings.development) {
+    console.log(`Running UglifyJS...`)
+    const uglified = uglifyJs.minify(
+      indexFile, {
+        compress: {
+          toplevel: true
+        },
+        mangle: {
+          toplevel: true
+        }
+      }
+    )
+    if (uglified.error) {
+      utilities.reportNonFatalError(`Failed to uglify JS: "${uglified.error}"`)
+    } else {
+      indexFile = uglified.code
+    }
+  }
+
+  await rimraf(paths.artifactsFile(`*.js`))
+  const filename = `${cacheBusting.generateFilename(Buffer.from(indexFile, `utf8`))}.js`
+  await fsWriteFile(paths.artifactsFile(filename), indexFile)
+
   let html = `<!DOCTYPE html>
 <html style="background: black; color: white; user-select: none; -moz-user-select: none; -ms-user-select: none; cursor: default;">
 <head>
@@ -194,7 +223,7 @@ export async function generateHtml(): Promise<void> {
 </head>
 <body style="display: table; position: fixed; left: 0; top: 0; width: 100%; height: 100%; margin: 0;">
   <pre id="message" style="display: table-cell; vertical-align: middle; text-align: center; font-family: sans-serif; font-size: 0.4cm;">Now loading... (please ensure that JavaScript is enabled)</pre>
-  <script src="index.js"></script>
+  <script src="${filename}"></script>
 </body>
 </html>`
 
