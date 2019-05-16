@@ -24,7 +24,7 @@ class Border {
     transformGroup(() => {
       translateX(this.content.leftBorder)
       scaleX((width - this.content.leftBorder - this.content.rightBorder) / this.content.middleWidth)
-      this.content.top.draw()
+      this.content.top.draw(true)
     })
     transformGroup(() => {
       translateX(width - this.content.rightBorder)
@@ -33,21 +33,21 @@ class Border {
     transformGroup(() => {
       translateY(this.content.topBorder)
       scaleY((height - this.content.topBorder - this.content.bottomBorder) / this.content.middleHeight)
-      this.content.left.draw()
+      this.content.left.draw(false, true)
       transformGroup(() => {
         translateX(this.content.leftBorder)
         scaleX((width - this.content.leftBorder - this.content.rightBorder) / this.content.middleWidth)
-        this.content.middle.draw()
+        this.content.middle.draw(true, true)
       })
       translateX(width - this.content.rightBorder)
-      this.content.right.draw()
+      this.content.right.draw(false, true)
     })
     translateY(height - this.content.bottomBorder)
     this.content.bottomLeft.draw()
     transformGroup(() => {
       translateX(this.content.leftBorder)
       scaleX((width - this.content.leftBorder - this.content.rightBorder) / this.content.middleWidth)
-      this.content.bottom.draw()
+      this.content.bottom.draw(true)
     })
     transformGroup(() => {
       translateX(width - this.content.rightBorder)
