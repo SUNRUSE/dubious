@@ -13,6 +13,13 @@ export default async function (): Promise<void> {
     console.log(`Hosting disabled.`)
   }
 
+  const watchSettings = {
+    awaitWriteFinish: {
+      stabilityThreshold: 250,
+      pollInterval: 50
+    }
+  }
+
   console.log(`Starting web server on port ${port}...`)
   await new Promise((resolve, reject) => express()
     .use(express.static(paths.artifactsDirectory()))
@@ -52,7 +59,7 @@ export default async function (): Promise<void> {
   let ranAtLeastOnce = false
 
   chokidar
-    .watch(paths.srcDirectory())
+    .watch(paths.srcDirectory(), watchSettings)
     .on(`add`, (path, stats) => handle(`add`, path, stats))
     .on(`change`, (path, stats) => handle(`change`, path, stats))
     .on(`unlink`, path => {
@@ -124,7 +131,7 @@ export default async function (): Promise<void> {
   let runningHtml = false
   let invalidatedHtml = false
   chokidar
-    .watch([paths.tempIndexFile(), paths.tempHtmlFragmentsFile()])
+    .watch([paths.tempIndexFile(), paths.tempHtmlFragmentsFile()], watchSettings)
     .on(`add`, handleHtml)
     .on(`change`, handleHtml)
     .on(`error`, error => { throw error })
