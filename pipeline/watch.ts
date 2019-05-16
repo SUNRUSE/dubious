@@ -124,7 +124,7 @@ export default async function (): Promise<void> {
   let runningHtml = false
   let invalidatedHtml = false
   chokidar
-    .watch(paths.artifactsIndexFile())
+    .watch([paths.artifactsIndexFile(), paths.tempHtmlFragmentsFile()])
     .on(`add`, handleHtml)
     .on(`change`, handleHtml)
     .on(`error`, error => { throw error })
