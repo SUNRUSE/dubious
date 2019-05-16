@@ -57,6 +57,10 @@ function onFrame(time: number): void {
   animationFrame = null
 
   if (audioContext !== null) {
+    if (audioContext.state === `suspended`) {
+      previousTime = null
+      audioContext.resume()
+    }
     time = audioContext.currentTime
   } else {
     time /= 1000
