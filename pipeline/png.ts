@@ -2,9 +2,10 @@ import * as fs from "fs"
 import * as util from "util"
 import * as pngjs from "pngjs"
 import * as _rimraf from "rimraf"
-import tempfile = require("tempfile")
+import * as uuid from "uuid"
 const pngcrushBin = require(`pngcrush-bin`)
 import shellExecute from "./shell-execute"
+import * as paths from "./paths"
 import * as types from "./types"
 import * as utilities from "./utilities"
 import settings from "./settings"
@@ -35,7 +36,7 @@ export async function writeWithCacheBusting(
   state: types.State,
   fromPng: pngjs.PNG
 ): Promise<string> {
-  const temp = tempfile()
+  const temp = paths.tempFile(uuid.v4())
   try {
     await write(fromPng, temp)
     const contents = await fsReadFile(temp)

@@ -15,6 +15,7 @@
     "@types/progress": "2.0.3",
     "@types/recursive-readdir": "2.2.0",
     "@types/rimraf": "2.0.2",
+    "@types/uuid": "^3.4.4",
     "chokidar": "3.0.0",
     "csv-parser": "2.3.0",
     "emflac": "0.2.0",
@@ -32,9 +33,9 @@
     "progress": "2.0.3",
     "recursive-readdir": "2.2.2",
     "rimraf": "2.6.3",
-    "tempfile": "3.0.0",
     "ts-node": "8.1.0",
     "typescript": "3.4.5",
-    "uglify-js": "3.5.12"
+    "uglify-js": "3.5.12",
+    "uuid": "^3.3.2"
   }
 }
