@@ -1,4 +1,3 @@
-import * as childProcess from "child_process"
 import * as fs from "fs"
 import * as util from "util"
 import * as favicons from "favicons"
@@ -8,6 +7,7 @@ const execBuffer = require(`exec-buffer`)
 import * as uglifyJs from "uglify-js"
 import * as _rimraf from "rimraf"
 import * as htmlMinifier from "html-minifier"
+import shellExecute from "./shell-execute"
 import * as types from "./types"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
@@ -51,21 +51,13 @@ export async function generateFavicons(
         case `aseprite`:
           const resolvedAsepritePath = await aseprite.executablePath.get()
           const saveAs = logoPath = paths.tempFile(`logo.png`)
-          await new Promise((resolve, reject) => childProcess
-            .spawn(
-              resolvedAsepritePath,
-              [
-                `--batch`, logos[0].source,
-                `--save-as`, saveAs
-              ]
-            )
-            .on(`exit`, status => {
-              if (status === 0) {
-                resolve()
-              } else {
-                reject(new Error(`Failed to invoke Aseprite to convert "${logos[0].source}".`))
-              }
-            })
+          await shellExecute(
+            `Invoke Aseprite to convert "${logos[0].source}"`,
+            resolvedAsepritePath,
+            [
+              `--batch`, logos[0].source,
+              `--save-as`, saveAs
+            ]
           )
           break
         case `png`:

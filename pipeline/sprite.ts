@@ -1,10 +1,10 @@
 import * as util from "util"
-import * as childProcess from "child_process"
 import * as _mkdirp from "mkdirp"
 import * as _rimraf from "rimraf"
 import * as pngjs from "pngjs"
 import * as types from "./types"
 import * as paths from "./paths"
+import shellExecute from "./shell-execute"
 import settings from "./settings"
 import * as utilities from "./utilities"
 import * as png from "./png"
@@ -53,51 +53,19 @@ const exported: types.PurposeImplementation["sprite"] = {
         const sheetPath = paths.importedFile(content, `sheet.png`)
         const resolvedAsepritePath = await aseprite.executablePath.get()
         await mkdirp(paths.importedDirectory(content))
-        const dataJson = await new Promise<string>((resolve, reject) => {
-          let output = ``
-          const process = childProcess.spawn(
-            resolvedAsepritePath,
-            [
-              `--batch`, content.source,
-              `--list-tags`,
-              `--format`, `json-array`,
-              `--sheet`, sheetPath,
-              `--sheet-pack`,
-              `--trim`,
-              `--ignore-empty`
-            ]
-          )
-
-          let stdOutClosed = false
-          let succeeded: null | boolean = null
-
-          process.stdout.on(`data`, data => output += data)
-          process.stdout.on(`close`, () => {
-            stdOutClosed = true
-            checkSuccess()
-          })
-
-          process.on(`exit`, status => {
-            succeeded = status === 0
-            checkSuccess()
-          })
-
-          function checkSuccess(): void {
-            if (!stdOutClosed) {
-              return
-            }
-            switch (succeeded) {
-              case null:
-                break
-              case false:
-                reject(new Error(`Failed to invoke Aseprite to convert "${content.source}"; "${output}".`))
-                break
-              case true:
-                resolve(output)
-                break
-            }
-          }
-        })
+        const dataJson = await shellExecute(
+          `Invoke Aseprite to convert "${content.source}".`,
+          resolvedAsepritePath,
+          [
+            `--batch`, content.source,
+            `--list-tags`,
+            `--format`, `json-array`,
+            `--sheet`, sheetPath,
+            `--sheet-pack`,
+            `--trim`,
+            `--ignore-empty`
+          ]
+        )
         const data: {
           readonly frames: ReadonlyArray<{
             readonly frame: {
@@ -148,21 +116,13 @@ const exported: types.PurposeImplementation["sprite"] = {
           }
           return allFrames
         } else {
-          await new Promise<string>((resolve, reject) => childProcess
-            .spawn(
-              resolvedAsepritePath,
-              [
-                `--batch`, content.source,
-                `--save-as`, sheetPath
-              ]
-            )
-            .on(`exit`, status => {
-              if (status === 0) {
-                resolve()
-              } else {
-                reject(new Error(`Failed to invoke Aseprite to convert "${content.source}".`))
-              }
-            })
+          await shellExecute(
+            `Invoke Aseprite to convert "${content.source}".`,
+            resolvedAsepritePath,
+            [
+              `--batch`, content.source,
+              `--save-as`, sheetPath
+            ]
           )
           const pngContent = await png.cache.get(sheetPath)
           const trimmed = png.findTrimBounds(pngContent)

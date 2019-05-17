@@ -1,9 +1,9 @@
 import * as fs from "fs"
 import * as util from "util"
-import * as childProcess from "child_process"
 import * as _mkdirp from "mkdirp"
 import * as _rimraf from "rimraf"
 import * as pngjs from "pngjs"
+import shellExecute from "./shell-execute"
 import * as types from "./types"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
@@ -52,25 +52,17 @@ const exported: types.PurposeImplementation["background"] = {
         const resolvedAsepritePath = await aseprite.executablePath.get()
         await mkdirp(paths.importedDirectory(content))
         const dataPath = paths.importedFile(content, `data.json`)
-        await new Promise<string>((resolve, reject) => childProcess
-          .spawn(
-            resolvedAsepritePath,
-            [
-              `--batch`, content.source,
-              `--save-as`, paths.importedFile(content, `0.png`),
-              `--data`, dataPath,
-              `--list-tags`,
-              `--format`, `json-array`,
-              `--ignore-empty`
-            ]
-          )
-          .on(`exit`, status => {
-            if (status === 0) {
-              resolve()
-            } else {
-              reject(new Error(`Failed to invoke Aseprite to convert "${content.source}".`))
-            }
-          })
+        await shellExecute(
+          `Invoke Aseprite to convert "${content.source}".`,
+          resolvedAsepritePath,
+          [
+            `--batch`, content.source,
+            `--save-as`, paths.importedFile(content, `0.png`),
+            `--data`, dataPath,
+            `--list-tags`,
+            `--format`, `json-array`,
+            `--ignore-empty`
+          ]
         )
         const dataJson = await fsReadFile(dataPath, { encoding: `utf8` })
         const data: {

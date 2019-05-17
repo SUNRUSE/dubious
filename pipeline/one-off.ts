@@ -1,7 +1,7 @@
-import * as childProcess from "child_process"
 import * as fs from "fs"
 import * as util from "util"
 import * as recursiveReaddir from "recursive-readdir"
+import shellExecute from "./shell-execute"
 import settings from "./settings"
 import * as paths from "./paths"
 import * as utilities from "./utilities"
@@ -15,33 +15,11 @@ export default async function (): Promise<void> {
     [filename: string]: string
   } = {}
   if (settings.ci) {
-    const fileList = await new Promise<string>((resolve, reject) => {
-      const process = childProcess.spawn(`git`, [`ls-files`, `--stage`])
-
-      let output = ``
-
-      let stdOutClosed = false
-      let succeeded: null | boolean = null
-
-      process.stdout.on(`data`, data => output += data)
-      process.stdout.on(`close`, () => {
-        stdOutClosed = true
-        if (succeeded) {
-          resolve(output)
-        }
-      })
-
-      process.on(`exit`, status => {
-        succeeded = status === 0
-        if (succeeded) {
-          if (stdOutClosed) {
-            resolve(output)
-          }
-        } else {
-          reject(new Error(`Failed to invoke Git to find files.`))
-        }
-      })
-    })
+    const fileList = await shellExecute(
+      `Get file hashes from Git.`,
+      `git`,
+      [`ls-files`, `--stage`]
+    )
 
     const regex = /^\S+\s+(\S+)\s+\S+\s+(\S+)$/gm
 
@@ -66,27 +44,14 @@ export default async function (): Promise<void> {
 
   await run(contentVersions)
   console.log(`Running TypeScript compiler...`)
-  const process = childProcess.spawn(
+  const output = await shellExecute(
+    `Invoke TypeScript compiler.`,
     paths.tsc,
-    [`--project`, paths.typescriptProjectFile()],
-    {
-      shell: true
-    }
+    [`--project`, paths.typescriptProjectFile()]
   )
-  process.stdout.setEncoding(`utf8`)
-  process.stdout.on(`data`, data => {
-    if (data.trim() !== ``) {
-      console.log(`[Typescript]: ${data.trim()}`)
-    }
-  })
-  await new Promise((resolve, reject) => process
-    .on(`exit`, status => {
-      if (status === 0) {
-        resolve()
-      } else {
-        reject(new Error(`Unexpected Typescript compiler exit (${status}).`))
-      }
-    })
-  )
+  output
+    .split(`\n`)
+    .filter(line => line !== ``)
+    .forEach(line => console.log(`[Typescript] ${line.trim()}`))
   await html.generateHtml()
 }
