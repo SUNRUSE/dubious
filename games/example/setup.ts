@@ -26,6 +26,9 @@ function keyBeingBound(): null | Input {
   return null
 }
 
+function keyBound(): void {
+}
+
 function initial(): State {
   return null
 }
