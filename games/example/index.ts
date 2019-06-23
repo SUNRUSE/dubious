@@ -5,6 +5,27 @@ const localStoragePrefix = `example`
 
 type State = null
 
+type Input =
+  | `up`
+  | `down`
+  | `left`
+  | `right`
+  | `select`
+  | `cancel`
+
+const keyBindings: { readonly [key in Input]: Key[] } = {
+  up: [`KeyW`, `ArrowUp`],
+  down: [`KeyS`, `ArrowDown`],
+  left: [`KeyA`, `ArrowLeft`],
+  right: [`KeyD`, `ArrowRight`],
+  select: [`Enter`],
+  cancel: [`Escape`]
+}
+
+function keyBeingBound(): null | Input {
+  return null
+}
+
 function initial(): State {
   return null
 }
