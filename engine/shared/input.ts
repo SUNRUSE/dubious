@@ -11,7 +11,6 @@ type Key =
   | `Digit6`
   | `Digit7`
   | `Digit8`
-  | `Digit8`
   | `Digit9`
   | `Minus`
   | `Equal`
@@ -114,7 +113,6 @@ function keyIsIdentified(code: string): null | Key {
     case `Digit5`:
     case `Digit6`:
     case `Digit7`:
-    case `Digit8`:
     case `Digit8`:
     case `Digit9`:
     case `Minus`:
