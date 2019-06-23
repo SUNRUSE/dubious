@@ -29,10 +29,10 @@ class Font {
       const lines = text.split(`\n`)
       switch (verticalAlignment) {
         case VerticalAlignment.Middle:
-          translateY((lines.length * this.content.layout.capHeight + (lines.length - 1) * this.content.layout.lineSpacing) / -2)
+          translateY(this.height(text) / -2)
           break
         case VerticalAlignment.Bottom:
-          translateY(-(lines.length * this.content.layout.capHeight + (lines.length - 1) * this.content.layout.lineSpacing))
+          translateY(-this.height(text))
           break
       }
       for (const line of lines) {
@@ -56,6 +56,14 @@ class Font {
         translateY(this.content.layout.capHeight + this.content.layout.lineSpacing)
       }
     })
+  }
+
+  width(text: string): number {
+    return Math.max.apply(Math, text.split(`\n`).map(line => this.lineWidth(line)))
+  }
+
+  height(text: string): number {
+    return text.split(`\n`).length * (this.content.layout.capHeight + this.content.layout.lineSpacing) - this.content.layout.lineSpacing
   }
 
   private lineWidth(line: string): number {
