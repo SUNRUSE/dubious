@@ -15,7 +15,7 @@
     "@types/progress": "2.0.3",
     "@types/recursive-readdir": "2.2.0",
     "@types/rimraf": "2.0.2",
-    "@types/uuid": "3.4.4",
+    "@types/uuid": "3.4.5",
     "chokidar": "3.0.1",
     "csv-parser": "2.3.0",
     "emflac": "0.2.0",
